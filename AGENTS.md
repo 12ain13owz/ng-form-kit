@@ -5,7 +5,7 @@ decisions). If this file disagrees with the code, the code wins — fix this fil
 
 ## Commands
 
-Run from the repo root (Node 22.22+ or 24).
+Run from the repo root with Node 26.13.1 or newer (`nvm use` reads `.nvmrc`).
 
 | Command                   | Does                                                         |
 | ------------------------- | ------------------------------------------------------------ |
