@@ -97,6 +97,10 @@ export class NameField {
 `InFormGroup` (`formControlName` inside `[formGroup]`, a submit button that marks all touched).
 Show the control's value and state under the field so the story proves the binding.
 
+Check every story in both themes (toolbar → theme, light / dark). The a11y addon checks contrast;
+a field must pass in both. Storybook's theme is spartan's default, not a brand theme: don't add
+colours to it.
+
 ## spartan helm (`src/lib/ui/`)
 
 Generated code. Add a primitive with the CLI, then fix its imports:
