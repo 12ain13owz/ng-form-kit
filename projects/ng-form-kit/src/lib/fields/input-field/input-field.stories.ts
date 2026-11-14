@@ -25,7 +25,7 @@ const meta: Meta<Args> = {
   argTypes: {
     type: {
       control: 'select',
-      options: ['text', 'email', 'password', 'search', 'tel', 'url', 'number'],
+      options: ['text', 'email', 'search', 'tel', 'url', 'number'],
     },
     appearance: { control: 'inline-radio', options: ['floating', 'stacked'] },
     hintPosition: { control: 'inline-radio', options: ['end', 'start'] },
@@ -106,8 +106,7 @@ export const CustomMessage: Story = {
 
 export const MinLength: Story = {
   args: {
-    label: 'Password',
-    type: 'password',
+    label: 'Username',
     hint: 'At least 8 characters.',
     control: (() => {
       const control = new FormControl('abc', {
@@ -209,4 +208,24 @@ export const OnCard: StoryObj = {
       </div>
     `,
   }),
+}
+
+/** A long error and a long hint: the hint drops to its own line instead of squeezing both. */
+export const LongMessages: Story = {
+  args: {
+    label: 'Email',
+    type: 'email',
+    hint: 'Used for the receipt and to reset your password.',
+    control: (() => {
+      const control = new FormControl('not-an-email', {
+        nonNullable: true,
+        validators: withMessage(
+          Validators.email,
+          'Enter a valid email address, like name@example.com, so we can send you the bill.'
+        ),
+      })
+      control.markAsTouched()
+      return control
+    })(),
+  },
 }

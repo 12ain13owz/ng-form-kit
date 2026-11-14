@@ -7,5 +7,10 @@ export * from './lib/core/form-kit-config'
 export * from './lib/core/field-error'
 export * from './lib/core/forward-control'
 
+// Building blocks for fields (and for an app's own fields)
+export * from './lib/core/field-shell'
+// spartan's field directive, part of nfk-field-shell (Angular needs it exported)
+export { HlmField } from './lib/ui/field/src'
+
 // Fields
 export * from './lib/fields/input-field/input-field'
