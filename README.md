@@ -1,1 +1,77 @@
 # ng-form-kit
+
+Reactive Forms fields for Angular 22, built on [spartan/ui](https://spartan.ng) and Tailwind v4.
+Each field is bound like a native input and shows its label, hint and first validation error.
+
+```html
+<form [formGroup]="form">
+  <nfk-input-field formControlName="name" label="Name" hint="Friends see this on the bill" />
+</form>
+```
+
+| Doc                      | What                                          |
+| ------------------------ | --------------------------------------------- |
+| [ROADMAP.md](ROADMAP.md) | What is built, what is next, locked decisions |
+| [AGENTS.md](AGENTS.md)   | How to write a field, stories, code style     |
+
+## Install in an app
+
+The package is on GitHub Packages. In the app, add an `.npmrc` beside `package.json`:
+
+```
+@12ain13owz:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+```
+
+`NODE_AUTH_TOKEN` is a GitHub token with `read:packages` (set it in your shell and in CI; never
+commit it). Then:
+
+```bash
+npm install @12ain13owz/ng-form-kit @spartan-ng/brain @angular/cdk @ng-icons/core @ng-icons/lucide tw-animate-css
+```
+
+The app needs Tailwind v4 and a spartan theme (`npx ng g @spartan-ng/cli:init` sets both up). Then
+tell Tailwind to scan the kit, or its classes won't be generated, in the app's global CSS:
+
+```css
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@spartan-ng/brain/hlm-tailwind-preset.css';
+
+@source '../node_modules/@12ain13owz/ng-form-kit';
+```
+
+(The path is relative to that CSS file.)
+
+### Error messages
+
+English messages work out of the box. To translate them, or word them your way, provide your own
+in `app.config.ts`. Example with ngx-translate:
+
+```ts
+import { toSignal } from '@angular/core/rxjs-interop'
+import { provideFormKit } from '@12ain13owz/ng-form-kit'
+
+provideFormKit({
+  errorMessage: (key, value) =>
+    typeof value === 'string'
+      ? translate.instant(value) // set with withMessage(...)
+      : translate.instant(`ERRORS.${key.toUpperCase()}`, value as object),
+  language: toSignal(translate.onLangChange), // re-translate on a language switch
+})
+```
+
+Per field: `withMessage(Validators.required, 'NAME_REQUIRED')` keeps the `required` key but sends
+your text (or translation key) as the message.
+
+## Develop
+
+Node 22.22+ or 24.
+
+```bash
+npm install
+npm run storybook   # http://localhost:6006
+```
+
+Checks before a PR: `npm run lint`, `npm run typecheck`, `npm run format:check`, `npm run build`,
+`npm run build-storybook`. Releases: ROADMAP → Release.
