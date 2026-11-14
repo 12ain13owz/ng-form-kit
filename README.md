@@ -99,6 +99,28 @@ Currency and locale default to `provideFormKit({ currency: 'THB', locale: 'th-TH
 `currency` / `locale` on a field for another one (decimals follow the currency: JPY has none).
 `allowNegative` lets the amount go below zero.
 
+### Select
+
+```html
+<nfk-select-field
+  formControlName="payer"
+  label="Paid by"
+  placeholder="Choose a person"
+  [options]="people"
+/>
+```
+
+```ts
+people: SelectOption<number>[] = [
+  { value: 1, label: 'Bank' },
+  { value: 2, label: 'Fah', disabled: true },
+]
+```
+
+A native `<select>`, so phones show their own picker. Values keep their type (`1` stays a number);
+the control is `null` until something is chosen. `clearable` lets the user pick the empty choice
+again; `compareWith` matches object values.
+
 ### Passwords and rule checklists
 
 ```html

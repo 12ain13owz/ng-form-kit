@@ -42,7 +42,8 @@ export class FieldMessage {}
  * ```
  *
  * The control must be the first element and carry `peer`, so a floating label can follow its
- * focus and empty state. Anything projected with `nfkFieldMessage` replaces the error line; a field
+ * focus and empty state: an `<input>` signals empty through `:placeholder-shown`; a control without
+ * a placeholder (a `<select>`) sets `data-rest="true"` while it is empty and not focused. Anything projected with `nfkFieldMessage` replaces the error line; a field
  * that re-projects it passes `hasCustomMessage`.
  */
 @Component({
@@ -71,7 +72,7 @@ export class FieldMessage {}
       <ng-content />
       @if (label() && appearanceValue() === 'floating') {
         <label
-          class="pointer-events-none absolute top-0 left-3 max-w-[calc(100%-1.5rem)] -translate-y-1/2 truncate rounded-sm bg-[var(--nfk-field-bg,var(--background))] px-1 text-xs leading-4 text-muted-foreground transition-all duration-150 ease-out group-data-[matches-spartan-invalid=true]/field:text-destructive peer-placeholder-shown:top-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:bg-[var(--nfk-field-bg,var(--background))] peer-focus:text-xs peer-focus:text-foreground peer-disabled:opacity-50"
+          class="pointer-events-none absolute top-0 left-3 max-w-[calc(100%-1.5rem)] -translate-y-1/2 truncate rounded-sm bg-[var(--nfk-field-bg,var(--background))] px-1 text-xs leading-4 text-muted-foreground transition-all duration-150 ease-out group-data-[matches-spartan-invalid=true]/field:text-destructive peer-placeholder-shown:top-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:bg-[var(--nfk-field-bg,var(--background))] peer-focus:text-xs peer-focus:text-foreground peer-disabled:opacity-50 peer-data-[rest=true]:top-1/2 peer-data-[rest=true]:bg-transparent peer-data-[rest=true]:text-sm"
           [for]="inputId()"
         >
           {{ label() }}

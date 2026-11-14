@@ -52,7 +52,7 @@ Tests (Vitest) come in one pass once a field's API is stable, not while it is st
 | 1a  | Shell, password, rules | ✅     | `nfk-field-shell` shared by all fields (long error / hint wrap, `nfkFieldMessage` slot); `nfk-password-field` (show / hide, `mode`, `rules`); `nfk-rule-checklist` + `rulesValidator` |
 | 2   | CI + first release     | ⬜     | CI on PRs; tag `v0.1.0` publishes to GitHub Packages (workflow ready, see below)                                                                                                      |
 | 3   | `money-field`          | ✅     | value in minor units (satang); `฿` on the right; plain number while focused, `1,234.50` on blur; any currency; `moneyMin` / `moneyMax`                                                |
-| 4   | `select-field`         | ⬜     | native select (spartan `native-select`) first; options as `{ value, label }[]`                                                                                                        |
+| 4   | `select-field`         | ✅     | native `<select>`; options `{ value, label, disabled? }[]`, values keep their type; `placeholder`, `clearable`, `compareWith`                                                         |
 | 5   | `checkbox-field`       | ⬜     | spartan `checkbox`; boolean value                                                                                                                                                     |
 | 6   | `textarea-field`       | ⬜     | spartan `textarea`; optional character counter                                                                                                                                        |
 | 7   | `toggle-field`         | ⬜     | spartan `switch`; boolean value                                                                                                                                                       |
@@ -103,6 +103,11 @@ SplitSlip needs #3–#5 first.
   (brand colours, light / dark) without touching the kit. Storybook keeps spartan's default theme
   and has a light / dark toolbar switch (`.dark` on `<html>`, as in apps); every story passes axe
   contrast checks in both. Kit variables: `--nfk-success`, `--nfk-field-bg`.
+- **`select-field` is a native `<select>`** (phones open their own picker; keyboard and screen
+  readers work as usual), not spartan's `hlm-native-select`, which only holds strings and keeps
+  its `<select>` in its own view where the floating label can't follow it. Values keep their type
+  through `ngValue`. A control without a placeholder signals "empty" to the floating label with
+  `data-rest="true"` (empty and not focused).
 - **Money in minor units** (integers: satang for THB) wherever a field holds money; `null` when
   empty. `nfk-money-field` shows the currency symbol on the right (the floating label owns the
   left), the plain number while focused and the grouped one on blur, and only lets valid amounts
@@ -127,5 +132,6 @@ SplitSlip needs #3–#5 first.
 
 ## Open questions
 
-- `select-field`: native `<select>` only, or also spartan's popover select later.
+- A popover select (search, many options) as its own field, if an app needs one; `select-field`
+  stays native.
 - Storybook hosting: GitHub Pages or Vercel.
