@@ -1,0 +1,52 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "npm"
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "ng-form-kit": {
+      "projectType": "library",
+      "root": "projects/ng-form-kit",
+      "sourceRoot": "projects/ng-form-kit/src",
+      "prefix": "nfk",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ng-form-kit/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ng-form-kit/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/ng-form-kit/tsconfig.spec.json"
+          }
+        },
+        "storybook": {
+          "builder": "@storybook/angular-vite:start-storybook",
+          "options": {
+            "configDir": "projects/ng-form-kit/.storybook",
+            "browserTarget": "ng-form-kit:build",
+            "port": 6006
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular-vite:build-storybook",
+          "options": {
+            "configDir": "projects/ng-form-kit/.storybook",
+            "browserTarget": "ng-form-kit:build",
+            "outputDir": "storybook-static"
+          }
+        }
+      }
+    }
+  }
+}

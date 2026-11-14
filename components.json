@@ -1,0 +1,5 @@
+{
+  "componentsPath": "projects/ng-form-kit/src/lib/ui",
+  "importAlias": "@spartan-ng/helm",
+  "style": "maia"
+}
