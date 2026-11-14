@@ -79,6 +79,13 @@ SplitSlip needs #3–#5 first.
 ## Locked decisions
 
 - **Own repo, own package:** not copied into apps. Apps install a released version.
+- **Versions (owner, 2026-11):** latest stable of every tool, never pinned to an older line:
+  Node **26 LTS, at least 26.13.1** (a security release; `engines` + `engine-strict` refuse older),
+  npm 11, Angular 22, Tailwind 4, spartan 1.x, Storybook 10. TypeScript stays on what Angular
+  supports (6.0 for Angular 22), not the newest TypeScript. Upgrade forward only.
+- **Install scripts are off:** npm 11 asks per package; `allowScripts` in `package.json` denies
+  them all (esbuild, Vite's watcher and lmdb use prebuilt binaries). Review before allowing a new
+  one.
 - **Angular 22, standalone, signals, OnPush.** Selector prefix `nfk-`.
 - **Fields forward the control** (`forwardControl()`): the field takes the `NgControl` on its own
   element, gives it a no-op value accessor and binds the same `FormControl` to its inner element.

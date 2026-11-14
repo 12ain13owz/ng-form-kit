@@ -13,7 +13,7 @@
     "helm:fix": "node scripts/fix-helm-imports.mjs && prettier --write projects/ng-form-kit/src/lib/ui tsconfig.json"
   },
   "private": true,
-  "packageManager": "npm@10.9.9",
+  "packageManager": "npm@11.20.0",
   "dependencies": {
     "@angular/cdk": "^22.2.7",
     "@angular/common": "^22.2.0",
@@ -43,7 +43,7 @@
     "@storybook/addon-themes": "^10.6.7",
     "@storybook/angular-vite": "^10.6.7",
     "@tailwindcss/vite": "^4.3.5",
-    "@types/node": "^22",
+    "@types/node": "^26.6.6",
     "angular-eslint": "^22.6.0",
     "eslint": "^10.15.0",
     "eslint-config-prettier": "^10.1.8",
@@ -61,6 +61,13 @@
   },
   "description": "Reactive Forms fields for Angular on spartan/ui — library workspace with Storybook",
   "engines": {
-    "node": "^22.22.0 || >=24.0.0"
+    "node": ">=26.13.1"
+  },
+  "allowScripts": {
+    "@parcel/watcher": false,
+    "esbuild": false,
+    "lmdb": false,
+    "msgpackr-extract": false,
+    "nx": false
   }
 }

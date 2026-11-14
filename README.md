@@ -140,7 +140,7 @@ your text (or translation key) as the message.
 
 ## Develop
 
-Node 22.22+ or 24.
+Node **26.13.1 or newer** (`.nvmrc`); older versions are refused at install (`engine-strict`).
 
 ```bash
 npm install
