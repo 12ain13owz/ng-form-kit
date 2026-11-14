@@ -1,0 +1,32 @@
+name: Release
+
+# Push a tag v<version> matching projects/ng-form-kit/package.json to publish to GitHub Packages.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          registry-url: https://npm.pkg.github.com
+          scope: '@12ain13owz'
+      - run: npm ci
+      - name: Tag matches the package version
+        run: |
+          version=$(node -p "require('./projects/ng-form-kit/package.json').version")
+          test "v$version" = "$GITHUB_REF_NAME" || { echo "tag $GITHUB_REF_NAME != v$version"; exit 1; }
+      - run: npm run build
+      - run: npm publish
+        working-directory: dist/ng-form-kit
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
