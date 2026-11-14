@@ -8,10 +8,11 @@ import {
   input,
 } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
+import type { FormControl } from '@angular/forms'
 import { controlPlaceholder, FIELD_SHELL_IMPORTS, FieldMessage } from '../../core/field-shell'
 import { FORM_KIT_CONFIG } from '../../core/form-kit-config'
 import type { FieldAppearance, HintPosition } from '../../core/form-kit-config'
-import { forwardControl } from '../../core/forward-control'
+import { provideFieldControl } from '../../core/field-control'
 import { currencySymbol } from '../../core/money'
 import { HlmInput } from '../../ui/input/src'
 import { MoneyInput } from './money-input'
@@ -19,11 +20,11 @@ import { MoneyInput } from './money-input'
 let nextId = 0
 
 /**
- * An amount of money, bound like a native input. The control holds **minor units** as an integer
+ * An amount of money, bound to a `FormControl` through `[control]`. The control holds **minor units** as an integer
  * (satang for THB: ฿1,234.50 → `123450`), or `null` when empty:
  *
  * ```html
- * <nfk-money-field formControlName="price" label="Price" />
+ * <nfk-money-field [control]="form.controls.price" label="Price" />
  * ```
  *
  * The box shows `1,234.50` with the currency symbol on the right; while focused it shows the plain
@@ -33,6 +34,7 @@ let nextId = 0
 @Component({
   selector: 'nfk-money-field',
   imports: [ReactiveFormsModule, FIELD_SHELL_IMPORTS, HlmInput, MoneyInput],
+  providers: [provideFieldControl(() => MoneyField)],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block' },
   template: `
@@ -49,7 +51,7 @@ let nextId = 0
         nfkMoneyInput
         class="peer pr-10 text-foreground tabular-nums group-data-[appearance=floating]/nfk:h-11 group-data-[appearance=floating]/nfk:placeholder:text-transparent group-data-[appearance=floating]/nfk:focus:placeholder:text-muted-foreground"
         [id]="inputId()"
-        [formControl]="boundControl()"
+        [formControl]="control()"
         [currency]="currencyValue()"
         [locale]="localeValue()"
         [allowNegative]="allowNegative()"
@@ -67,6 +69,8 @@ let nextId = 0
   `,
 })
 export class MoneyField {
+  /** The amount in minor units (satang for THB), `null` when empty. */
+  control = input.required<FormControl<number | null>>()
   /** Visible label. Leave empty only with `ariaLabel`. */
   label = input('')
   /** Screen-reader label for a field with no visible label. */
@@ -85,7 +89,6 @@ export class MoneyField {
   /** Id of the inner `<input>`; generated when not set. */
   inputId = input(`nfk-money-field-${nextId++}`)
 
-  protected boundControl = forwardControl()
   protected customMessage = contentChild(FieldMessage)
   private config = inject(FORM_KIT_CONFIG)
   protected currencyValue = computed(() => this.currency() ?? this.config.currency)

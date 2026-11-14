@@ -48,7 +48,7 @@ const meta: Meta<Args> = {
     template: `
       <div class="max-w-sm space-y-4 p-4">
         <nfk-money-field
-          [formControl]="control"
+          [control]="control"
           [label]="label"
           [hint]="hint"
           [placeholder]="placeholder"
@@ -118,8 +118,8 @@ export const OtherCurrencies: StoryObj = {
     },
     template: `
       <div class="max-w-sm space-y-5 p-4">
-        <nfk-money-field [formControl]="usd" label="USD" currency="USD" locale="en-US" />
-        <nfk-money-field [formControl]="jpy" label="JPY" currency="JPY" locale="ja-JP" />
+        <nfk-money-field [control]="usd" label="USD" currency="USD" locale="en-US" />
+        <nfk-money-field [control]="jpy" label="JPY" currency="JPY" locale="ja-JP" />
         <pre class="text-muted-foreground text-xs">usd: {{ usd.value }} cents · jpy: {{ jpy.value }} yen</pre>
       </div>
     `,
@@ -155,9 +155,9 @@ export const BillItems: StoryObj = {
       template: `
         <form class="max-w-md space-y-3 p-4" [formGroup]="form" (ngSubmit)="submit()">
           @for (row of items.controls; track $index) {
-            <div class="grid grid-cols-[1fr_9rem] gap-3" [formGroup]="row">
-              <nfk-input-field formControlName="name" label="Item" />
-              <nfk-money-field formControlName="price" label="Price" />
+            <div class="grid grid-cols-[1fr_9rem] gap-3">
+              <nfk-input-field [control]="row.controls.name" label="Item" />
+              <nfk-money-field [control]="row.controls.price" label="Price" />
             </div>
           }
           <div class="flex items-center justify-between pt-2">

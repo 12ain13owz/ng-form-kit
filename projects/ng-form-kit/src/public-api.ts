@@ -6,7 +6,7 @@
 export * from './lib/core/form-kit-config'
 export * from './lib/core/field-error'
 export * from './lib/core/field-rules'
-export * from './lib/core/forward-control'
+export * from './lib/core/field-control'
 export * from './lib/core/money'
 
 // Building blocks for fields (and for an app's own fields)

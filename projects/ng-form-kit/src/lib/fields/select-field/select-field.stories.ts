@@ -51,7 +51,7 @@ const meta: Meta<Args> = {
     template: `
       <div class="max-w-sm space-y-4 p-4">
         <nfk-select-field
-          [formControl]="control"
+          [control]="control"
           [options]="options"
           [label]="label"
           [hint]="hint"
@@ -134,7 +134,7 @@ export const ObjectValues: StoryObj = {
       },
       template: `
         <div class="max-w-sm space-y-4 p-4">
-          <nfk-select-field [formControl]="control" [options]="options" [compareWith]="byId" label="Person" />
+          <nfk-select-field [control]="control" [options]="options" [compareWith]="byId" label="Person" />
           <pre class="text-muted-foreground text-xs">{{ control.value | json }}</pre>
         </div>
       `,
@@ -153,8 +153,8 @@ export const InFormGroup: StoryObj = {
       props: { form, people, submit: () => form.markAllAsTouched() },
       template: `
         <form class="max-w-sm space-y-4 p-4" [formGroup]="form" (ngSubmit)="submit()">
-          <nfk-select-field formControlName="payer" label="Paid by" placeholder="Choose a person" [options]="people" />
-          <nfk-money-field formControlName="amount" label="Amount paid" />
+          <nfk-select-field [control]="form.controls.payer" label="Paid by" placeholder="Choose a person" [options]="people" />
+          <nfk-money-field [control]="form.controls.amount" label="Amount paid" />
           <button type="submit" class="bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm">
             Save
           </button>

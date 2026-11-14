@@ -8,10 +8,11 @@ import {
   input,
 } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
+import type { FormControl } from '@angular/forms'
 import { controlPlaceholder, FIELD_SHELL_IMPORTS, FieldMessage } from '../../core/field-shell'
 import { FORM_KIT_CONFIG } from '../../core/form-kit-config'
 import type { FieldAppearance, HintPosition } from '../../core/form-kit-config'
-import { forwardControl } from '../../core/forward-control'
+import { provideFieldControl } from '../../core/field-control'
 import { HlmInput } from '../../ui/input/src'
 
 /** Text-like types. For passwords use `nfk-password-field`. */
@@ -20,10 +21,10 @@ export type InputFieldType = 'text' | 'email' | 'search' | 'tel' | 'url' | 'numb
 let nextId = 0
 
 /**
- * A labelled text input with hint and error text, bound like a native input:
+ * A labelled text input with hint and error text, bound to a `FormControl` through `[control]`:
  *
  * ```html
- * <nfk-input-field formControlName="name" label="Name" hint="As on your ID card" />
+ * <nfk-input-field [control]="form.controls.name" label="Name" hint="As on your ID card" />
  * ```
  *
  * - `appearance="floating"` (default) puts the label inside the box; it moves onto the top border on
@@ -40,6 +41,7 @@ let nextId = 0
 @Component({
   selector: 'nfk-input-field',
   imports: [ReactiveFormsModule, FIELD_SHELL_IMPORTS, HlmInput],
+  providers: [provideFieldControl(() => InputField)],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block' },
   template: `
@@ -56,7 +58,7 @@ let nextId = 0
         class="peer text-foreground group-data-[appearance=floating]/nfk:h-11 group-data-[appearance=floating]/nfk:placeholder:text-transparent group-data-[appearance=floating]/nfk:focus:placeholder:text-muted-foreground"
         [id]="inputId()"
         [type]="type()"
-        [formControl]="boundControl()"
+        [formControl]="control()"
         [placeholder]="inputPlaceholder()"
         [readOnly]="readonly()"
         [attr.autocomplete]="autocomplete()"
@@ -68,6 +70,8 @@ let nextId = 0
   `,
 })
 export class InputField {
+  /** The text control, e.g. `form.controls.name`. */
+  control = input.required<FormControl<string | null>>()
   /** Visible label. Leave empty only with `ariaLabel`. */
   label = input('')
   /** Screen-reader label for a field with no visible label. */
@@ -85,7 +89,6 @@ export class InputField {
   /** Id of the inner `<input>`; generated when not set. */
   inputId = input(`nfk-input-field-${nextId++}`)
 
-  protected boundControl = forwardControl()
   protected customMessage = contentChild(FieldMessage)
   private config = inject(FORM_KIT_CONFIG)
   protected appearanceValue = computed(() => this.appearance() ?? this.config.appearance)

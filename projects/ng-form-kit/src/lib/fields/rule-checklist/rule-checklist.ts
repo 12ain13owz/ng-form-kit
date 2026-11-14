@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core'
-import { toObservable, toSignal } from '@angular/core/rxjs-interop'
-import { NgControl } from '@angular/forms'
 import type { AbstractControl } from '@angular/forms'
 import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucideCheck, lucideCircle, lucideX } from '@ng-icons/lucide'
-import { of, startWith, switchMap } from 'rxjs'
+import { controlChanges, FIELD_CONTROL } from '../../core/field-control'
 import { rulePasses } from '../../core/field-rules'
 import type { FieldRule } from '../../core/field-rules'
 
@@ -28,7 +26,7 @@ interface RuleLine {
  * Put it in a field's message slot; it reads that field's control:
  *
  * ```html
- * <nfk-input-field formControlName="username" label="Username">
+ * <nfk-input-field [control]="form.controls.username" label="Username">
  *   <nfk-rule-checklist nfkFieldMessage [rules]="usernameRules" />
  * </nfk-input-field>
  * ```
@@ -75,10 +73,10 @@ export class RuleChecklist {
   metLabel = input('met')
   /** Read by screen readers after a line not met yet. */
   unmetLabel = input('not met')
-  /** The control to check. Defaults to the field this checklist sits in. */
+  /** The control to check. Defaults to the control of the field this checklist sits in. */
   control = input<AbstractControl | null>(null)
 
-  private ngControl = inject(NgControl, { optional: true })
+  private field = inject(FIELD_CONTROL, { optional: true })
 
   protected stateIcon: Record<RuleState, string> = {
     met: 'lucideCheck',
@@ -93,15 +91,9 @@ export class RuleChecklist {
     pending: 'text-muted-foreground',
   }
 
-  private target = computed(() => this.control() ?? this.ngControl?.control ?? null)
+  private target = computed(() => this.control() ?? this.field?.control() ?? null)
 
-  /** Bumps on every value, status or touched change of the target control. */
-  private tick = toSignal(
-    toObservable(this.target).pipe(
-      switchMap((control) => (control ? control.events.pipe(startWith(null)) : of(null)))
-    ),
-    { initialValue: null }
-  )
+  private tick = controlChanges(this.target)
 
   protected lines = computed<RuleLine[]>(() => {
     this.tick()

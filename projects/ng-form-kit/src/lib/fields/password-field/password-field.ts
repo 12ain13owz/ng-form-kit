@@ -8,13 +8,14 @@ import {
   signal,
 } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
+import type { FormControl } from '@angular/forms'
 import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucideEye, lucideEyeOff } from '@ng-icons/lucide'
 import { controlPlaceholder, FIELD_SHELL_IMPORTS, FieldMessage } from '../../core/field-shell'
 import type { FieldRule } from '../../core/field-rules'
 import { FORM_KIT_CONFIG } from '../../core/form-kit-config'
 import type { FieldAppearance, HintPosition } from '../../core/form-kit-config'
-import { forwardControl } from '../../core/forward-control'
+import { provideFieldControl } from '../../core/field-control'
 import { HlmInput } from '../../ui/input/src'
 import { RuleChecklist } from '../rule-checklist/rule-checklist'
 
@@ -27,14 +28,14 @@ export type PasswordFieldMode = 'current' | 'new'
 let nextId = 0
 
 /**
- * A password input with a show / hide button, bound like a native input:
+ * A password input with a show / hide button, bound to a `FormControl` through `[control]`:
  *
  * ```html
  * <!-- sign in -->
- * <nfk-password-field formControlName="password" label="Password" />
+ * <nfk-password-field [control]="form.controls.password" label="Password" />
  *
  * <!-- sign up: a live checklist instead of a single error line -->
- * <nfk-password-field formControlName="password" label="New password" mode="new" [rules]="rules" />
+ * <nfk-password-field [control]="form.controls.password" label="New password" mode="new" [rules]="rules" />
  * ```
  *
  * With `rules`, `nfk-rule-checklist` takes the error line's place; validate with the same rules
@@ -44,7 +45,7 @@ let nextId = 0
 @Component({
   selector: 'nfk-password-field',
   imports: [ReactiveFormsModule, FIELD_SHELL_IMPORTS, HlmInput, NgIcon, RuleChecklist],
-  providers: [provideIcons({ lucideEye, lucideEyeOff })],
+  providers: [provideFieldControl(() => PasswordField), provideIcons({ lucideEye, lucideEyeOff })],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block' },
   template: `
@@ -63,7 +64,7 @@ let nextId = 0
         spellcheck="false"
         [id]="inputId()"
         [type]="visible() ? 'text' : 'password'"
-        [formControl]="boundControl()"
+        [formControl]="control()"
         [placeholder]="inputPlaceholder()"
         [attr.autocomplete]="mode() === 'new' ? 'new-password' : 'current-password'"
         [attr.aria-label]="label() ? null : ariaLabel()"
@@ -74,7 +75,7 @@ let nextId = 0
         [attr.aria-label]="visible() ? hideLabel() : showLabel()"
         [attr.aria-pressed]="visible()"
         [attr.aria-controls]="inputId()"
-        [disabled]="boundControl().disabled"
+        [disabled]="control().disabled"
         (click)="visible.set(!visible())"
       >
         <ng-icon size="18" aria-hidden="true" [name]="visible() ? 'lucideEyeOff' : 'lucideEye'" />
@@ -85,7 +86,7 @@ let nextId = 0
           nfkFieldMessage
           [rules]="rules()"
           [title]="rulesTitle()"
-          [control]="boundControl()"
+          [control]="control()"
         />
       }
       <ng-content select="[nfkFieldMessage]" ngProjectAs="[nfkFieldMessage]" />
@@ -93,6 +94,8 @@ let nextId = 0
   `,
 })
 export class PasswordField {
+  /** The password control, e.g. `form.controls.password`. */
+  control = input.required<FormControl<string | null>>()
   /** Visible label. Leave empty only with `ariaLabel`. */
   label = input('')
   /** Screen-reader label for a field with no visible label. */
@@ -114,7 +117,6 @@ export class PasswordField {
   /** Id of the inner `<input>`; generated when not set. */
   inputId = input(`nfk-password-field-${nextId++}`)
 
-  protected boundControl = forwardControl()
   protected customMessage = contentChild(FieldMessage)
   protected visible = signal(false)
   private config = inject(FORM_KIT_CONFIG)

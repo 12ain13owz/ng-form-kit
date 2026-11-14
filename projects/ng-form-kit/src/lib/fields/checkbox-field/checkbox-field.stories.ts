@@ -26,7 +26,7 @@ const meta: Meta<Args> = {
     props: args,
     template: `
       <div class="max-w-sm space-y-4 p-4">
-        <nfk-checkbox-field [formControl]="control" [label]="label" [hint]="hint" [hintPosition]="hintPosition" />
+        <nfk-checkbox-field [control]="control" [label]="label" [hint]="hint" [hintPosition]="hintPosition" />
         <pre class="text-muted-foreground text-xs">value: {{ control.value | json }} · touched: {{ control.touched }}</pre>
       </div>
     `,
@@ -74,7 +74,7 @@ export const ProjectedLabel: StoryObj = {
     },
     template: `
       <div class="max-w-sm p-4">
-        <nfk-checkbox-field [formControl]="control" hint="You can change this later.">
+        <nfk-checkbox-field [control]="control" hint="You can change this later.">
           I accept the <a href="https://example.com/terms" target="_blank">terms of use</a>
         </nfk-checkbox-field>
       </div>
@@ -101,7 +101,7 @@ export const WhoAteWhat: StoryObj = {
         <form class="max-w-sm space-y-3 p-4" [formGroup]="form">
           <p class="text-sm font-medium">ต้มยำกุ้ง ฿280.00 — who had it?</p>
           @for (name of people; track name) {
-            <nfk-checkbox-field [formControlName]="name" [label]="name" />
+            <nfk-checkbox-field [control]="form.controls[name]" [label]="name" />
           }
           <p class="text-muted-foreground text-xs">Split between: {{ eaters() }}</p>
         </form>

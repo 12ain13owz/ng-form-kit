@@ -19,7 +19,7 @@ const SHELL_A11Y = new InjectionToken<BrnFieldA11yService>('nfk shell a11y')
  * Marks content a field shows in place of its single error line, e.g. a password checklist:
  *
  * ```html
- * <nfk-input-field formControlName="username" label="Username">
+ * <nfk-input-field [control]="form.controls.username" label="Username">
  *   <nfk-rule-checklist nfkFieldMessage [rules]="usernameRules" />
  * </nfk-input-field>
  * ```
