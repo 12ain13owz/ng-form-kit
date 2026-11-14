@@ -9,8 +9,23 @@ import type { EnvironmentProviders, Signal } from '@angular/core'
  */
 export type ErrorMessageFn = (key: string, value: unknown) => string
 
+/**
+ * How a field shows its label:
+ * - `floating`: inside the box like a placeholder; it moves up onto the top border on focus or once
+ *   the field has a value.
+ * - `stacked`: above the box.
+ */
+export type FieldAppearance = 'floating' | 'stacked'
+
+/** Which side of the row under the box the hint sits on. The error always starts on the left. */
+export type HintPosition = 'start' | 'end'
+
 export interface FormKitConfig {
   errorMessage: ErrorMessageFn
+  /** Default for every field's `appearance`. */
+  appearance: FieldAppearance
+  /** Default for every field's `hintPosition`. */
+  hintPosition: HintPosition
   /**
    * Read every time a message is built, so messages update when it changes. Pass the app's active
    * language (e.g. `toSignal(translate.onLangChange)`) to re-translate errors on a language switch.
@@ -48,9 +63,15 @@ export const defaultErrorMessage: ErrorMessageFn = (key, value) => {
   }
 }
 
+const DEFAULT_CONFIG: FormKitConfig = {
+  errorMessage: defaultErrorMessage,
+  appearance: 'floating',
+  hintPosition: 'end',
+}
+
 export const FORM_KIT_CONFIG = new InjectionToken<FormKitConfig>('FORM_KIT_CONFIG', {
   providedIn: 'root',
-  factory: () => ({ errorMessage: defaultErrorMessage }),
+  factory: () => DEFAULT_CONFIG,
 })
 
 /**
@@ -58,6 +79,8 @@ export const FORM_KIT_CONFIG = new InjectionToken<FormKitConfig>('FORM_KIT_CONFI
  *
  * ```ts
  * provideFormKit({
+ *   appearance: 'floating',
+ *   hintPosition: 'end',
  *   errorMessage: (key, value) =>
  *     typeof value === 'string' ? translate.instant(value) : translate.instant(`ERRORS.${key}`, value),
  * })
@@ -67,6 +90,6 @@ export const provideFormKit = (config: Partial<FormKitConfig>): EnvironmentProvi
   makeEnvironmentProviders([
     {
       provide: FORM_KIT_CONFIG,
-      useValue: { errorMessage: defaultErrorMessage, ...config } satisfies FormKitConfig,
+      useValue: { ...DEFAULT_CONFIG, ...config } satisfies FormKitConfig,
     },
   ])
