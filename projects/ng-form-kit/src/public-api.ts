@@ -15,6 +15,7 @@ export * from './lib/core/field-shell'
 export { HlmField } from './lib/ui/field/src'
 
 // Fields
+export * from './lib/fields/checkbox-field/checkbox-field'
 export * from './lib/fields/input-field/input-field'
 export * from './lib/fields/money-field/money-field'
 export * from './lib/fields/money-field/money-input'
