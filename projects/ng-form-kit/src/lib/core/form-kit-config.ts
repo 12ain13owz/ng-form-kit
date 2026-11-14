@@ -26,6 +26,10 @@ export interface FormKitConfig {
   appearance: FieldAppearance
   /** Default for every field's `hintPosition`. */
   hintPosition: HintPosition
+  /** Default locale for formatting numbers and money, e.g. `th-TH`. */
+  locale: string
+  /** Default ISO 4217 currency of money fields, e.g. `THB`. */
+  currency: string
   /**
    * Read every time a message is built, so messages update when it changes. Pass the app's active
    * language (e.g. `toSignal(translate.onLangChange)`) to re-translate errors on a language switch.
@@ -60,6 +64,10 @@ export const defaultErrorMessage: ErrorMessageFn = (key, value) => {
       return 'The format is not valid.'
     case 'rules':
       return 'Does not meet all the requirements.'
+    case 'moneyMin':
+      return `Must be at least ${String(params['minText'])}.`
+    case 'moneyMax':
+      return `Must be at most ${String(params['maxText'])}.`
     default:
       return 'This value is not valid.'
   }
@@ -69,6 +77,8 @@ const DEFAULT_CONFIG: FormKitConfig = {
   errorMessage: defaultErrorMessage,
   appearance: 'floating',
   hintPosition: 'end',
+  locale: 'th-TH',
+  currency: 'THB',
 }
 
 export const FORM_KIT_CONFIG = new InjectionToken<FormKitConfig>('FORM_KIT_CONFIG', {
