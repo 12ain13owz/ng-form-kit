@@ -10,7 +10,7 @@ import type { ValidatorFn } from '@angular/forms'
 export interface FieldRule<T = string> {
   /** Stable id, reported in the validator's error. */
   key: string
-  /** Text of the line. Pass it already translated. */
+  /** Text of the line: a translation key or plain text (it goes through `provideFormKit`'s `translate`). */
   label: string
   test?: (value: T) => boolean
   children?: FieldRule<T>[]
