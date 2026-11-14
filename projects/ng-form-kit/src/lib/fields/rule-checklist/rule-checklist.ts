@@ -86,7 +86,9 @@ export class RuleChecklist {
     pending: 'lucideCircle',
   }
   protected stateClass: Record<RuleState, string> = {
-    met: 'text-[var(--nfk-success,oklch(0.6_0.16_150))]',
+    // Fallbacks pass WCAG AA on spartan's default light and dark backgrounds. An app with its own
+    // theme sets --nfk-success (in both modes).
+    met: 'text-[var(--nfk-success,oklch(0.5_0.14_150))] dark:text-[var(--nfk-success,oklch(0.76_0.15_150))]',
     unmet: 'text-destructive',
     pending: 'text-muted-foreground',
   }

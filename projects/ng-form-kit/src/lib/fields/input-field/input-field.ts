@@ -53,7 +53,7 @@ let nextId = 0
     >
       <input
         hlmInput
-        class="peer group-data-[appearance=floating]/nfk:h-11 group-data-[appearance=floating]/nfk:placeholder:text-transparent group-data-[appearance=floating]/nfk:focus:placeholder:text-muted-foreground"
+        class="peer text-foreground group-data-[appearance=floating]/nfk:h-11 group-data-[appearance=floating]/nfk:placeholder:text-transparent group-data-[appearance=floating]/nfk:focus:placeholder:text-muted-foreground"
         [id]="inputId()"
         [type]="type()"
         [formControl]="boundControl()"
