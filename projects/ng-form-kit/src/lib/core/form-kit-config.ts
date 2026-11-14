@@ -58,6 +58,8 @@ export const defaultErrorMessage: ErrorMessageFn = (key, value) => {
       return `Must be ${String(params['max'])} or less.`
     case 'pattern':
       return 'The format is not valid.'
+    case 'rules':
+      return 'Does not meet all the requirements.'
     default:
       return 'This value is not valid.'
   }
