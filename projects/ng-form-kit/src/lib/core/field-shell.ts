@@ -83,7 +83,7 @@ export class FieldMessage {}
     @if (hasCustomMessage() || showError() || hint()) {
       <!-- Wraps: when the error and the hint don't fit on one line, the hint drops below. -->
       <div
-        class="mt-1 flex flex-wrap items-start gap-x-3 gap-y-1 text-xs leading-4 group-data-[appearance=floating]/nfk:px-4"
+        class="mt-1 flex flex-wrap items-start gap-x-3 gap-y-1 text-xs leading-4 group-data-[appearance=floating]/nfk:px-4 group-data-[appearance=inline]/nfk:ps-7"
       >
         @if (hint() && hintPositionValue() === 'start' && !showError() && !hasCustomMessage()) {
           <p hlmFieldDescription class="min-w-0 flex-1 text-xs leading-4">{{ hint() }}</p>
@@ -111,13 +111,23 @@ export class FieldShell {
   hint = input('')
   /** Id of the control inside; the labels point at it. */
   inputId = input.required<string>()
-  appearance = input<FieldAppearance | null>(null)
+  /**
+   * `floating` / `stacked` as for every field; `inline` for a control that carries its own label
+   * beside it (a checkbox): the shell draws no label and indents the message row past a 16px box.
+   */
+  appearance = input<FieldAppearance | 'inline' | null>(null)
   hintPosition = input<HintPosition | null>(null)
   /** True when the field projects `nfkFieldMessage` content through the shell. */
   hasCustomMessage = input(false)
 
   private config = inject(FORM_KIT_CONFIG)
   private field = inject(BrnField)
+  private a11y = inject(SHELL_A11Y)
+  /**
+   * Ids of the hint and error, for a control that can't pick up `aria-describedby` by itself (one
+   * whose focusable element sits inside its own view, like spartan's checkbox).
+   */
+  describedBy = computed(() => this.a11y.describedBy())
   protected error = fieldErrorMessage(computed(() => this.field))
 
   /** The appearance in use: the input, or the app default from `provideFormKit`. */
