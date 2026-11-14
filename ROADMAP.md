@@ -92,8 +92,10 @@ SplitSlip needs #3–#5 first.
   ng-packagr doesn't rewrite path aliases. `@spartan-ng/brain`, `@angular/*`, `@ng-icons/*`,
   Tailwind and `tw-animate-css` are **peer dependencies**; `clsx`, `tailwind-merge` and
   `class-variance-authority` ship as dependencies.
-- **No theme in the package.** The app's spartan theme styles the fields; Storybook has its own
-  default theme in `.storybook/styles.css`.
+- **No theme in the package.** Fields use the app's spartan variables, so an app themes them
+  (brand colours, light / dark) without touching the kit. Storybook keeps spartan's default theme
+  and has a light / dark toolbar switch (`.dark` on `<html>`, as in apps); every story passes axe
+  contrast checks in both. Kit variables: `--nfk-success`, `--nfk-field-bg`.
 - **Money in satang** (integers) wherever a field holds money.
 - **One shell for every field** (`core/field-shell.ts`): label, error / custom message, hint and
   `aria-describedby` live there, fields only add their control. The message row wraps: when the
