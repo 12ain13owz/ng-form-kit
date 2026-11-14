@@ -203,3 +203,7 @@ npm run storybook   # http://localhost:6006
 
 Checks before a PR: `npm run lint`, `npm run typecheck`, `npm run format:check`, `npm run build`,
 `npm run build-storybook`. Releases: ROADMAP → Release.
+
+## License
+
+[MIT](LICENSE). Changes per version: [CHANGELOG.md](CHANGELOG.md).
