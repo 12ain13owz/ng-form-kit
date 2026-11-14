@@ -67,10 +67,20 @@ SplitSlip's fields (#3–#5) are done; it needs the first release (#2) to instal
 
 ---
 
-## Release (GitHub Packages)
+## Release (npmjs.com)
 
-- `.github/workflows/release.yml` runs on a `v*` tag: build, then `npm publish` from
-  `dist/ng-form-kit` to `https://npm.pkg.github.com` with the workflow's `GITHUB_TOKEN`.
+- Public on **npmjs.com** as `@12ain13owz/ng-form-kit` (owner, 2026-11): anyone installs it with
+  `npm install`, no token. The source is public and MIT, so nothing needs a private registry.
+- `.github/workflows/release.yml` runs on a `v*` tag: checks the tag matches the package version,
+  skips if that version is already on npm, builds, and runs `npm publish` from `dist/ng-form-kit`.
+- **Trusted publishing:** npm checks the workflow through GitHub's OIDC token (`id-token: write`),
+  so no npm token is stored in the repo, and the package gets a provenance statement. Set up once
+  on npmjs.com → the package → Settings → Trusted publisher: GitHub Actions, owner `12ain13owz`,
+  repo `ng-form-kit`, workflow `release.yml`.
+- **First publish:** if npm won't take a trusted publisher before the package exists, publish
+  0.1.0 once by hand (`npm login`, `npm run build`, `cd dist/ng-form-kit`,
+  `npm publish --access public`), then add the trusted publisher. Pushing the `v0.1.0` tag after
+  that is safe: the workflow sees the version on npm and skips.
 - Steps, one PR `release/<version>`: set `version` in `projects/ng-form-kit/package.json`, add the
   version to `CHANGELOG.md`, and check the package in a fresh app (`npm pack` from
   `dist/ng-form-kit`, `ng new`, install the `.tgz`, set up Tailwind as the README says, build, open
@@ -78,8 +88,6 @@ SplitSlip's fields (#3–#5) are done; it needs the first release (#2) to instal
   SemVer; while `0.x`, a minor bump may break the API.
 - MIT licence. `LICENSE` lives at the root and, as a copy, in `projects/ng-form-kit/` (ng-packagr
   only copies files from the library folder); keep them identical.
-- An app installs it with an `.npmrc` that points the scope at GitHub Packages, and a token with
-  `read:packages` (README → Install).
 
 ## Locked decisions
 

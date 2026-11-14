@@ -20,15 +20,21 @@ First release.
 
 ### Shared
 
+- Every field takes its typed `FormControl` as a signal input: `[control]="form.controls.x"`.
 - Every field: floating (default) or stacked label, error and hint under the box (the hint drops
   below a long error), `nfkFieldMessage` slot for custom feedback, `aria-describedby` wired.
 - `provideFormKit()`: error messages (English defaults), `language` signal, default
   `appearance`, `hintPosition`, `locale`, `currency`.
-- `withMessage()`, `forwardControl()`, `nfk-field-shell` for an app's own fields.
+- `withMessage()`; `nfk-field-shell`, `provideFieldControl()` and `controlChanges()` for an app's
+  own fields.
 - `FieldRule[]`, `rulesValidator()`, `nfk-rule-checklist`.
 - Money helpers: `formatMoney`, `formatMinorUnits`, `moneyMin`, `moneyMax`.
 - No colours of its own: follows the app's spartan theme, light and dark. Kit variables
   `--nfk-success`, `--nfk-field-bg`.
+
+### Install
+
+`npm install @12ain13owz/ng-form-kit` from npmjs.com, no token.
 
 ### Requires
 

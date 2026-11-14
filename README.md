@@ -16,15 +16,7 @@ Each field is bound like a native input and shows its label, hint and first vali
 
 ## Install in an app
 
-The package is on GitHub Packages. In the app, add an `.npmrc` beside `package.json`:
-
-```
-@12ain13owz:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
-```
-
-`NODE_AUTH_TOKEN` is a GitHub token with `read:packages` (set it in your shell and in CI; never
-commit it). Then:
+The package is public on npmjs.com; no token or `.npmrc` needed:
 
 ```bash
 npm install @12ain13owz/ng-form-kit @spartan-ng/brain @angular/cdk @ng-icons/core @ng-icons/lucide tw-animate-css
