@@ -53,7 +53,7 @@ Tests (Vitest) come in one pass once a field's API is stable, not while it is st
 | 2   | CI + first release     | ⬜     | CI on PRs; tag `v0.1.0` publishes to GitHub Packages (workflow ready, see below)                                                                                                      |
 | 3   | `money-field`          | ✅     | value in minor units (satang); `฿` on the right; plain number while focused, `1,234.50` on blur; any currency; `moneyMin` / `moneyMax`                                                |
 | 4   | `select-field`         | ✅     | native `<select>`; options `{ value, label, disabled? }[]`, values keep their type; `placeholder`, `clearable`, `compareWith`                                                         |
-| 5   | `checkbox-field`       | ⬜     | spartan `checkbox`; boolean value                                                                                                                                                     |
+| 5   | `checkbox-field`       | ✅     | spartan `checkbox`, boolean; label beside the box (input or projected, links allowed); hint / error indented under it                                                                 |
 | 6   | `textarea-field`       | ⬜     | spartan `textarea`; optional character counter                                                                                                                                        |
 | 7   | `toggle-field`         | ⬜     | spartan `switch`; boolean value                                                                                                                                                       |
 | 8   | `otp-field`            | ⬜     | spartan `input-otp`                                                                                                                                                                   |
@@ -63,7 +63,7 @@ Tests (Vitest) come in one pass once a field's API is stable, not while it is st
 
 ✅ done · 🚧 in progress · ⬜ not started · ⏸ deferred
 
-SplitSlip needs #3–#5 first.
+SplitSlip's fields (#3–#5) are done; it needs the first release (#2) to install the kit.
 
 ---
 
@@ -108,6 +108,9 @@ SplitSlip needs #3–#5 first.
   its `<select>` in its own view where the floating label can't follow it. Values keep their type
   through `ngValue`. A control without a placeholder signals "empty" to the floating label with
   `data-rest="true"` (empty and not focused).
+- **A checkbox carries its own label** beside the box: the shell runs in `inline` mode (no label,
+  message row indented past the box, hint on the left by default). spartan's checkbox keeps its
+  focusable button inside its own view, so the field hands it the shell's `describedBy()` ids.
 - **Money in minor units** (integers: satang for THB) wherever a field holds money; `null` when
   empty. `nfk-money-field` shows the currency symbol on the right (the floating label owns the
   left), the plain number while focused and the grouped one on blur, and only lets valid amounts

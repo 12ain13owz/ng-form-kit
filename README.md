@@ -121,6 +121,19 @@ A native `<select>`, so phones show their own picker. Values keep their type (`1
 the control is `null` until something is chosen. `clearable` lets the user pick the empty choice
 again; `compareWith` matches object values.
 
+### Checkbox
+
+```html
+<nfk-checkbox-field formControlName="splitService" label="Split the service charge too" />
+
+<nfk-checkbox-field formControlName="agree">
+  I accept the <a href="/terms">terms</a>
+</nfk-checkbox-field>
+```
+
+A boolean control. For "must be ticked" use `Validators.requiredTrue` (error key `required`), with
+`withMessage` for your own text.
+
 ### Passwords and rule checklists
 
 ```html
