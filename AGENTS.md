@@ -55,6 +55,9 @@ export class NameField {
 - **Don't name a field property `control`, `value` or `formControl`:** Storybook sets story args
   on the component by name and overwrites it.
 - **Errors:** `fieldErrorMessage(field)` only; never hard-code message text in a field.
+- **Look:** every field supports `appearance` (`floating` | `stacked`) and `hintPosition`
+  (`start` | `end`), defaulting to `FORM_KIT_CONFIG`. Copy the label, the message row and their
+  classes from `input-field` so all fields look the same.
 - **Inputs:** `input()` / `output()` / `model()`, `booleanAttribute` for flags. Generate ids
   (`nfk-<name>-field-${nextId++}`) and allow overriding them.
 - **Accessibility:** a visible label or an `ariaLabel` input; label `for` matches the inner id.

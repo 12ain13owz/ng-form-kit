@@ -43,6 +43,22 @@ tell Tailwind to scan the kit, or its classes won't be generated, in the app's g
 
 (The path is relative to that CSS file.)
 
+### Look
+
+Labels float inside the box by default and the hint sits on the right under it. Change either
+app-wide or per field:
+
+```ts
+provideFormKit({ appearance: 'stacked', hintPosition: 'start' })
+```
+
+```html
+<nfk-input-field formControlName="name" label="Name" appearance="stacked" hintPosition="start" />
+```
+
+On a card or any surface other than the page background, set `--nfk-field-bg` to that surface's
+colour so the floated label's background matches: `<div class="bg-card [--nfk-field-bg:var(--color-card)]">`.
+
 ### Error messages
 
 English messages work out of the box. To translate them, or word them your way, provide your own
