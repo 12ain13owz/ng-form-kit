@@ -8,7 +8,7 @@
     "url": "git+https://github.com/12ain13owz/ng-form-kit.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "peerDependencies": {
     "@angular/cdk": ">=22.0.0 <23.0.0",
@@ -28,5 +28,17 @@
     "tailwind-merge": "^3.0.0",
     "tslib": "^2.3.0"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "homepage": "https://github.com/12ain13owz/ng-form-kit#readme",
+  "bugs": {
+    "url": "https://github.com/12ain13owz/ng-form-kit/issues"
+  },
+  "keywords": [
+    "angular",
+    "forms",
+    "reactive-forms",
+    "spartan",
+    "tailwind",
+    "form-fields"
+  ]
 }
