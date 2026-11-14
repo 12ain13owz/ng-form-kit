@@ -1,23 +1,21 @@
-import type { AfterContentInit } from '@angular/core'
 import {
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
   contentChild,
-  DestroyRef,
   inject,
   input,
   signal,
 } from '@angular/core'
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { ReactiveFormsModule } from '@angular/forms'
+import type { FormControl } from '@angular/forms'
 import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucideChevronDown } from '@ng-icons/lucide'
 import { FIELD_SHELL_IMPORTS, FieldMessage } from '../../core/field-shell'
 import { FORM_KIT_CONFIG } from '../../core/form-kit-config'
 import type { FieldAppearance, HintPosition } from '../../core/form-kit-config'
-import { forwardControl } from '../../core/forward-control'
+import { controlChanges, provideFieldControl } from '../../core/field-control'
 import { HlmInput } from '../../ui/input/src'
 
 /** One choice of a select. `value` can be any type: a string, a number, an object. */
@@ -32,11 +30,11 @@ let nextId = 0
 const isEmpty = (value: unknown): boolean => value === null || value === undefined || value === ''
 
 /**
- * A labelled native `<select>`, bound like a native input. Values keep their type (numbers stay
+ * A labelled native `<select>`, bound to a `FormControl` through `[control]`. Values keep their type (numbers stay
  * numbers, objects stay objects); the control is `null` while nothing is chosen:
  *
  * ```html
- * <nfk-select-field formControlName="payer" label="Paid by" [options]="people" />
+ * <nfk-select-field [control]="form.controls.payer" label="Paid by" [options]="people" />
  * ```
  *
  * Native on purpose: phones open their own picker, and keyboard and screen readers work as
@@ -46,7 +44,7 @@ const isEmpty = (value: unknown): boolean => value === null || value === undefin
 @Component({
   selector: 'nfk-select-field',
   imports: [ReactiveFormsModule, FIELD_SHELL_IMPORTS, HlmInput, NgIcon],
-  providers: [provideIcons({ lucideChevronDown })],
+  providers: [provideFieldControl(() => SelectField), provideIcons({ lucideChevronDown })],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block' },
   template: `
@@ -62,7 +60,7 @@ const isEmpty = (value: unknown): boolean => value === null || value === undefin
         hlmInput
         class="peer cursor-pointer appearance-none pe-10 text-foreground group-data-[appearance=floating]/nfk:h-11 data-[rest=true]:text-transparent [&>option]:text-foreground"
         [id]="inputId()"
-        [formControl]="boundControl()"
+        [formControl]="control()"
         [compareWith]="compareWith()"
         [attr.data-rest]="resting()"
         [attr.aria-label]="label() ? null : ariaLabel()"
@@ -86,7 +84,9 @@ const isEmpty = (value: unknown): boolean => value === null || value === undefin
     </nfk-field-shell>
   `,
 })
-export class SelectField<T = unknown> implements AfterContentInit {
+export class SelectField<T = unknown> {
+  /** The chosen value, `null` while nothing is chosen. */
+  control = input.required<FormControl<T | null>>()
   options = input.required<readonly SelectOption<T>[]>()
   /** Visible label. Leave empty only with `ariaLabel`. */
   label = input('')
@@ -104,12 +104,12 @@ export class SelectField<T = unknown> implements AfterContentInit {
   /** Id of the inner `<select>`; generated when not set. */
   inputId = input(`nfk-select-field-${nextId++}`)
 
-  protected boundControl = forwardControl()
   protected customMessage = contentChild(FieldMessage)
   protected focused = signal(false)
   private config = inject(FORM_KIT_CONFIG)
-  private destroyRef = inject(DestroyRef)
-  private value = signal<unknown>(null)
+  private changes = controlChanges(this.control)
+  // Read straight from the control (right on the first render), recomputed on its changes.
+  private value = computed(() => (this.changes(), this.control().value))
   protected appearanceValue = computed(() => this.appearance() ?? this.config.appearance)
   /**
    * Empty and not focused, with a floating label: the label sits inside the box and the select's
@@ -122,14 +122,4 @@ export class SelectField<T = unknown> implements AfterContentInit {
       isEmpty(this.value()) &&
       !this.focused()
   )
-
-  // The host's FormControlName sets up its control in ngOnChanges, which runs before content init
-  // and before this view first renders, so the first render already knows the value.
-  ngAfterContentInit(): void {
-    const control = this.boundControl()
-    this.value.set(control.value)
-    control.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((value) => this.value.set(value))
-  }
 }

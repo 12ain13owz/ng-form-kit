@@ -45,7 +45,7 @@ const meta: Meta<Args> = {
     template: `
       <div class="max-w-sm space-y-4 p-4">
         <nfk-input-field
-          [formControl]="control"
+          [control]="control"
           [label]="label"
           [hint]="hint"
           [placeholder]="placeholder"
@@ -127,7 +127,7 @@ export const Readonly: Story = {
   args: { readonly: true, control: new FormControl('Somchai', { nonNullable: true }) },
 }
 
-/** The usual way in an app: `formControlName` inside a `[formGroup]`. Submit marks all touched. */
+/** The usual way in an app: `[control]="form.controls.x"` inside a `[formGroup]`. Submit marks all touched. */
 export const InFormGroup: StoryObj = {
   render: () => {
     const form = new FormGroup({
@@ -141,8 +141,8 @@ export const InFormGroup: StoryObj = {
       props: { form, submit: () => form.markAllAsTouched() },
       template: `
         <form class="max-w-sm space-y-4 p-4" [formGroup]="form" (ngSubmit)="submit()">
-          <nfk-input-field formControlName="name" label="Name" />
-          <nfk-input-field formControlName="email" label="Email" type="email" autocomplete="email" />
+          <nfk-input-field [control]="form.controls.name" label="Name" />
+          <nfk-input-field [control]="form.controls.email" label="Email" type="email" autocomplete="email" />
           <button type="submit" class="bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm">
             Save
           </button>
@@ -174,12 +174,12 @@ export const Appearances: StoryObj = {
         <div class="grid max-w-2xl grid-cols-2 gap-x-6 gap-y-5 p-4">
           <p class="text-sm font-medium">floating</p>
           <p class="text-sm font-medium">stacked</p>
-          <nfk-input-field [formControl]="empty" label="Name" hint="Shown on the bill" />
-          <nfk-input-field [formControl]="stackedEmpty" label="Name" hint="Shown on the bill" appearance="stacked" />
-          <nfk-input-field [formControl]="filled" label="Name" />
-          <nfk-input-field [formControl]="stackedFilled" label="Name" appearance="stacked" />
-          <nfk-input-field [formControl]="floatingError" label="Email" hint="For the receipt" />
-          <nfk-input-field [formControl]="stackedError" label="Email" hint="For the receipt" appearance="stacked" />
+          <nfk-input-field [control]="empty" label="Name" hint="Shown on the bill" />
+          <nfk-input-field [control]="stackedEmpty" label="Name" hint="Shown on the bill" appearance="stacked" />
+          <nfk-input-field [control]="filled" label="Name" />
+          <nfk-input-field [control]="stackedFilled" label="Name" appearance="stacked" />
+          <nfk-input-field [control]="floatingError" label="Email" hint="For the receipt" />
+          <nfk-input-field [control]="stackedError" label="Email" hint="For the receipt" appearance="stacked" />
         </div>
       `,
     }
@@ -203,7 +203,7 @@ export const OnCard: StoryObj = {
     template: `
       <div class="p-4">
         <div class="bg-card max-w-sm rounded-xl border p-4 shadow-sm [--nfk-field-bg:var(--color-card)]">
-          <nfk-input-field [formControl]="control" label="Name" />
+          <nfk-input-field [control]="control" label="Name" />
         </div>
       </div>
     `,

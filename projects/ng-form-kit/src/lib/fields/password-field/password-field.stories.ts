@@ -60,7 +60,7 @@ const meta: Meta<Args> = {
     template: `
       <div class="max-w-sm space-y-4 p-4">
         <nfk-password-field
-          [formControl]="control"
+          [control]="control"
           [label]="label"
           [hint]="hint"
           [mode]="mode"
@@ -140,7 +140,7 @@ export const InFormGroup: StoryObj = {
       props: { form, rules: passwordRules, submit: () => form.markAllAsTouched() },
       template: `
         <form class="max-w-sm space-y-4 p-4" [formGroup]="form" (ngSubmit)="submit()">
-          <nfk-password-field formControlName="password" label="New password" mode="new" [rules]="rules" />
+          <nfk-password-field [control]="form.controls.password" label="New password" mode="new" [rules]="rules" />
           <button type="submit" class="bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm">
             Sign up
           </button>

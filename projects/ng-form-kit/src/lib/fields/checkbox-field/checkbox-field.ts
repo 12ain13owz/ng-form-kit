@@ -7,21 +7,22 @@ import {
   viewChild,
 } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
+import type { FormControl } from '@angular/forms'
 import { FIELD_SHELL_IMPORTS, FieldMessage, FieldShell } from '../../core/field-shell'
 import type { HintPosition } from '../../core/form-kit-config'
-import { forwardControl } from '../../core/forward-control'
+import { provideFieldControl } from '../../core/field-control'
 import { HlmCheckbox } from '../../ui/checkbox/src'
 
 let nextId = 0
 
 /**
- * A checkbox with its label beside it, bound like a native input to a boolean control:
+ * A checkbox with its label beside it, bound to a boolean `FormControl`:
  *
  * ```html
- * <nfk-checkbox-field formControlName="splitService" label="Split the service charge too" />
+ * <nfk-checkbox-field [control]="form.controls.splitService" label="Split the service charge too" />
  *
  * <!-- rich label: project it -->
- * <nfk-checkbox-field formControlName="agree">I accept the <a href="/terms">terms</a></nfk-checkbox-field>
+ * <nfk-checkbox-field [control]="form.controls.agree">I accept the <a href="/terms">terms</a></nfk-checkbox-field>
  * ```
  *
  * For "must be ticked", validate with `Validators.requiredTrue` (its error key is `required`; give
@@ -31,6 +32,7 @@ let nextId = 0
 @Component({
   selector: 'nfk-checkbox-field',
   imports: [ReactiveFormsModule, FIELD_SHELL_IMPORTS, HlmCheckbox],
+  providers: [provideFieldControl(() => CheckboxField)],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block' },
   template: `
@@ -45,7 +47,7 @@ let nextId = 0
         <hlm-checkbox
           class="mt-0.5"
           [inputId]="inputId()"
-          [formControl]="boundControl()"
+          [formControl]="control()"
           [aria-label]="hasLabel() ? null : ariaLabel()"
           [aria-describedby]="shell()?.describedBy() ?? null"
         />
@@ -60,6 +62,8 @@ let nextId = 0
   `,
 })
 export class CheckboxField {
+  /** The ticked state. */
+  control = input.required<FormControl<boolean | null>>()
   /** Text beside the box. Or project content for a label with links or formatting. */
   label = input('')
   /** Screen-reader label when there is no visible label at all. */
@@ -70,7 +74,6 @@ export class CheckboxField {
   /** Id of the checkbox; generated when not set. */
   inputId = input(`nfk-checkbox-field-${nextId++}`)
 
-  protected boundControl = forwardControl()
   protected customMessage = contentChild(FieldMessage)
   protected shell = viewChild(FieldShell)
   /** A label from the input or projected content; without either, `ariaLabel` names the box. */

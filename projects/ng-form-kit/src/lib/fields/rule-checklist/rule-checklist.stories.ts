@@ -37,7 +37,7 @@ export const InInputField: StoryObj = {
     },
     template: `
       <div class="max-w-sm p-4">
-        <nfk-input-field [formControl]="control" label="Username" hint="Shown to friends">
+        <nfk-input-field [control]="control" label="Username" hint="Shown to friends">
           <nfk-rule-checklist nfkFieldMessage [rules]="rules" />
         </nfk-input-field>
       </div>
