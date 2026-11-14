@@ -80,6 +80,25 @@ provideFormKit({ appearance: 'stacked', hintPosition: 'start' })
 On a card or any surface other than the page background, set `--nfk-field-bg` to that surface's
 colour so the floated label's background matches: `<div class="bg-card [--nfk-field-bg:var(--color-card)]">`.
 
+### Money
+
+```html
+<nfk-money-field formControlName="price" label="Price" />
+```
+
+The control holds **minor units** as an integer, or `null` when empty: satang for THB, so
+฿1,234.50 is `123450`. Add and split integers, format only to show:
+
+```ts
+price = this.nnfb.control<number | null>(null, [Validators.required, moneyMin(100)]) // ≥ ฿1.00
+
+formatMoney(123450, 'THB', 'th-TH') // '฿1,234.50'
+```
+
+Currency and locale default to `provideFormKit({ currency: 'THB', locale: 'th-TH' })`; set
+`currency` / `locale` on a field for another one (decimals follow the currency: JPY has none).
+`allowNegative` lets the amount go below zero.
+
 ### Passwords and rule checklists
 
 ```html

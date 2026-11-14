@@ -51,7 +51,7 @@ Tests (Vitest) come in one pass once a field's API is stable, not while it is st
 | 1   | Core + `input-field`   | ✅     | `provideFormKit`, `withMessage`, `forwardControl`; `nfk-input-field`, floating / stacked label, hint start / end                                                                      |
 | 1a  | Shell, password, rules | ✅     | `nfk-field-shell` shared by all fields (long error / hint wrap, `nfkFieldMessage` slot); `nfk-password-field` (show / hide, `mode`, `rules`); `nfk-rule-checklist` + `rulesValidator` |
 | 2   | CI + first release     | ⬜     | CI on PRs; tag `v0.1.0` publishes to GitHub Packages (workflow ready, see below)                                                                                                      |
-| 3   | `money-field`          | ⬜     | THB; shows baht, value in **satang** (integer); for SplitSlip                                                                                                                         |
+| 3   | `money-field`          | ✅     | value in minor units (satang); `฿` on the right; plain number while focused, `1,234.50` on blur; any currency; `moneyMin` / `moneyMax`                                                |
 | 4   | `select-field`         | ⬜     | native select (spartan `native-select`) first; options as `{ value, label }[]`                                                                                                        |
 | 5   | `checkbox-field`       | ⬜     | spartan `checkbox`; boolean value                                                                                                                                                     |
 | 6   | `textarea-field`       | ⬜     | spartan `textarea`; optional character counter                                                                                                                                        |
@@ -103,7 +103,12 @@ SplitSlip needs #3–#5 first.
   (brand colours, light / dark) without touching the kit. Storybook keeps spartan's default theme
   and has a light / dark toolbar switch (`.dark` on `<html>`, as in apps); every story passes axe
   contrast checks in both. Kit variables: `--nfk-success`, `--nfk-field-bg`.
-- **Money in satang** (integers) wherever a field holds money.
+- **Money in minor units** (integers: satang for THB) wherever a field holds money; `null` when
+  empty. `nfk-money-field` shows the currency symbol on the right (the floating label owns the
+  left), the plain number while focused and the grouped one on blur, and only lets valid amounts
+  in (one point, the currency's decimals, 13 whole digits). Locale and currency default to
+  `provideFormKit` (`th-TH`, `THB`). Its inner input has its own value accessor (`nfkMoneyInput`):
+  the one case where the box text isn't the control value.
 - **One shell for every field** (`core/field-shell.ts`): label, error / custom message, hint and
   `aria-describedby` live there, fields only add their control. The message row wraps: when the
   error and the hint don't fit on one line, the hint drops below, right-aligned.
