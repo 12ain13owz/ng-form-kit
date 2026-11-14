@@ -202,7 +202,7 @@ export const OnCard: StoryObj = {
     props: { control: new FormControl('Somchai', { nonNullable: true }) },
     template: `
       <div class="p-4">
-        <div class="bg-muted max-w-sm rounded-xl p-4 [--nfk-field-bg:var(--color-muted)]">
+        <div class="bg-card max-w-sm rounded-xl border p-4 shadow-sm [--nfk-field-bg:var(--color-card)]">
           <nfk-input-field [formControl]="control" label="Name" />
         </div>
       </div>

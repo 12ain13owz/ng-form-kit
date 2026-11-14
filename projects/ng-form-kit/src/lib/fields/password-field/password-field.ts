@@ -58,7 +58,7 @@ let nextId = 0
     >
       <input
         hlmInput
-        class="peer pr-11 group-data-[appearance=floating]/nfk:h-11 group-data-[appearance=floating]/nfk:placeholder:text-transparent group-data-[appearance=floating]/nfk:focus:placeholder:text-muted-foreground"
+        class="peer pr-11 text-foreground group-data-[appearance=floating]/nfk:h-11 group-data-[appearance=floating]/nfk:placeholder:text-transparent group-data-[appearance=floating]/nfk:focus:placeholder:text-muted-foreground"
         autocapitalize="off"
         spellcheck="false"
         [id]="inputId()"
