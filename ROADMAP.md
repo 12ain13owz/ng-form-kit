@@ -45,20 +45,21 @@ Tests (Vitest) come in one pass once a field's API is stable, not while it is st
 
 ## Status
 
-| #   | Phase / field        | Status | Notes                                                                                                            |
-| --- | -------------------- | ------ | ---------------------------------------------------------------------------------------------------------------- |
-| 0   | Workspace            | ✅     | Angular 22 library (ng-packagr), Storybook 10 (angular-vite), Tailwind v4, spartan, lint                         |
-| 1   | Core + `input-field` | ✅     | `provideFormKit`, `withMessage`, `forwardControl`; `nfk-input-field`, floating / stacked label, hint start / end |
-| 2   | CI + first release   | ⬜     | CI on PRs; tag `v0.1.0` publishes to GitHub Packages (workflow ready, see below)                                 |
-| 3   | `money-field`        | ⬜     | THB; shows baht, value in **satang** (integer); for SplitSlip                                                    |
-| 4   | `select-field`       | ⬜     | native select (spartan `native-select`) first; options as `{ value, label }[]`                                   |
-| 5   | `checkbox-field`     | ⬜     | spartan `checkbox`; boolean value                                                                                |
-| 6   | `textarea-field`     | ⬜     | spartan `textarea`; optional character counter                                                                   |
-| 7   | `toggle-field`       | ⬜     | spartan `switch`; boolean value                                                                                  |
-| 8   | `otp-field`          | ⬜     | spartan `input-otp`                                                                                              |
-| 9   | Form helpers         | ⬜     | `markTouchedOnSubmit` directive, `FORM_KIT_IMPORTS`                                                              |
-| 10  | Tests                | ⬜     | Vitest for core and each field                                                                                   |
-| 11  | Storybook online     | ⬜     | publish `storybook-static` (GitHub Pages or Vercel)                                                              |
+| #   | Phase / field          | Status | Notes                                                                                                                                                                                 |
+| --- | ---------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0   | Workspace              | ✅     | Angular 22 library (ng-packagr), Storybook 10 (angular-vite), Tailwind v4, spartan, lint                                                                                              |
+| 1   | Core + `input-field`   | ✅     | `provideFormKit`, `withMessage`, `forwardControl`; `nfk-input-field`, floating / stacked label, hint start / end                                                                      |
+| 1a  | Shell, password, rules | ✅     | `nfk-field-shell` shared by all fields (long error / hint wrap, `nfkFieldMessage` slot); `nfk-password-field` (show / hide, `mode`, `rules`); `nfk-rule-checklist` + `rulesValidator` |
+| 2   | CI + first release     | ⬜     | CI on PRs; tag `v0.1.0` publishes to GitHub Packages (workflow ready, see below)                                                                                                      |
+| 3   | `money-field`          | ⬜     | THB; shows baht, value in **satang** (integer); for SplitSlip                                                                                                                         |
+| 4   | `select-field`         | ⬜     | native select (spartan `native-select`) first; options as `{ value, label }[]`                                                                                                        |
+| 5   | `checkbox-field`       | ⬜     | spartan `checkbox`; boolean value                                                                                                                                                     |
+| 6   | `textarea-field`       | ⬜     | spartan `textarea`; optional character counter                                                                                                                                        |
+| 7   | `toggle-field`         | ⬜     | spartan `switch`; boolean value                                                                                                                                                       |
+| 8   | `otp-field`            | ⬜     | spartan `input-otp`                                                                                                                                                                   |
+| 9   | Form helpers           | ⬜     | `markTouchedOnSubmit` directive, `FORM_KIT_IMPORTS`                                                                                                                                   |
+| 10  | Tests                  | ⬜     | Vitest for core and each field                                                                                                                                                        |
+| 11  | Storybook online       | ⬜     | publish `storybook-static` (GitHub Pages or Vercel)                                                                                                                                   |
 
 ✅ done · 🚧 in progress · ⬜ not started · ⏸ deferred
 
@@ -94,6 +95,15 @@ SplitSlip needs #3–#5 first.
 - **No theme in the package.** The app's spartan theme styles the fields; Storybook has its own
   default theme in `.storybook/styles.css`.
 - **Money in satang** (integers) wherever a field holds money.
+- **One shell for every field** (`core/field-shell.ts`): label, error / custom message, hint and
+  `aria-describedby` live there, fields only add their control. The message row wraps: when the
+  error and the hint don't fit on one line, the hint drops below, right-aligned.
+- **Passwords are their own field** (`nfk-password-field`), not a `type` of `input-field`: show /
+  hide button, `autocomplete` from `mode` (`current` / `new`), and an optional rules checklist.
+- **Rules drive both the check and the display:** `FieldRule[]` → `rulesValidator(rules)` and
+  `nfk-rule-checklist`. Lines: ✓ met (green, `--nfk-success`), ✕ unmet top-level rule once touched,
+  ○ otherwise (a group's unmet children stay ○, since the group may need only some). Labels are
+  passed already translated.
 - **Field look (owner, 2026-11):** label `floating` by default (inside the box, moves onto the top
   border on focus or with a value) or `stacked` (above). Under the box one compact row (4px below
   it): the error on the left, the hint on the right by default (`hintPosition: 'end'`); with

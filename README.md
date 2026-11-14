@@ -59,6 +59,43 @@ provideFormKit({ appearance: 'stacked', hintPosition: 'start' })
 On a card or any surface other than the page background, set `--nfk-field-bg` to that surface's
 colour so the floated label's background matches: `<div class="bg-card [--nfk-field-bg:var(--color-card)]">`.
 
+### Passwords and rule checklists
+
+```html
+<!-- sign in -->
+<nfk-password-field formControlName="password" label="Password" />
+
+<!-- sign up: a live checklist under the field instead of a single error -->
+<nfk-password-field formControlName="password" label="New password" mode="new" [rules]="rules" />
+```
+
+```ts
+const rules: FieldRule[] = [
+  { key: 'length', label: 'At least 8 characters', test: (v) => v.length >= 8 },
+  {
+    key: 'kinds',
+    label: 'At least 3 of:',
+    minPassed: 3,
+    children: [
+      { key: 'lower', label: 'a-z', test: (v) => /[a-z]/.test(v) },
+      { key: 'upper', label: 'A-Z', test: (v) => /[A-Z]/.test(v) },
+      { key: 'digit', label: '0-9', test: (v) => /\d/.test(v) },
+      { key: 'symbol', label: '!@#…', test: (v) => /[^A-Za-z0-9]/.test(v) },
+    ],
+  },
+]
+password = this.nnfb.control('', [Validators.required, rulesValidator(rules)])
+```
+
+Any field takes its own feedback in place of the error line through the `nfkFieldMessage` slot,
+e.g. the same checklist under a username:
+
+```html
+<nfk-input-field formControlName="username" label="Username">
+  <nfk-rule-checklist nfkFieldMessage [rules]="usernameRules" />
+</nfk-input-field>
+```
+
 ### Error messages
 
 English messages work out of the box. To translate them, or word them your way, provide your own

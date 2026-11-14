@@ -21,43 +21,67 @@ Before calling a change done: `lint`, `typecheck`, `format:check`, `build`, `bui
 
 ## Writing a field
 
-Copy the shape of `src/lib/fields/input-field/`.
+Copy the shape of `src/lib/fields/input-field/`. Every field wraps its control in
+`nfk-field-shell`, which draws the label (floating or stacked), the error or custom message and the
+hint, and wires `aria-describedby`. A field only adds its control and its own inputs.
 
 ```ts
 @Component({
   selector: 'nfk-<name>-field',
-  imports: [ReactiveFormsModule, HlmFieldImports /* + the helm pieces it uses */],
+  imports: [ReactiveFormsModule, FIELD_SHELL_IMPORTS, HlmInput /* the helm control it uses */],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block' },
   template: `
-    <div hlmField>
-      <label hlmFieldLabel [for]="inputId()">{{ label() }}</label>
-      <input hlmInput [id]="inputId()" [formControl]="boundControl()" />
-      <p hlmFieldDescription>{{ hint() }}</p>
-      <hlm-field-error>{{ error() }}</hlm-field-error>
-    </div>
+    <nfk-field-shell
+      [label]="label()"
+      [hint]="hint()"
+      [inputId]="inputId()"
+      [appearance]="appearanceValue()"
+      [hintPosition]="hintPosition()"
+      [hasCustomMessage]="!!customMessage()"
+    >
+      <input
+        hlmInput
+        class="peer group-data-[appearance=floating]/nfk:h-11 group-data-[appearance=floating]/nfk:placeholder:text-transparent group-data-[appearance=floating]/nfk:focus:placeholder:text-muted-foreground"
+        [id]="inputId()"
+        [formControl]="boundControl()"
+        [placeholder]="inputPlaceholder()"
+      />
+      <ng-content select="[nfkFieldMessage]" ngProjectAs="[nfkFieldMessage]" />
+    </nfk-field-shell>
   `,
 })
 export class NameField {
   label = input('')
   hint = input('')
+  placeholder = input('')
+  appearance = input<FieldAppearance | null>(null)
+  hintPosition = input<HintPosition | null>(null)
   inputId = input(`nfk-<name>-field-${nextId++}`)
 
   protected boundControl = forwardControl()
-  private field = viewChild.required(BrnField)
-  protected error = fieldErrorMessage(this.field)
+  protected customMessage = contentChild(FieldMessage)
+  private config = inject(FORM_KIT_CONFIG)
+  protected appearanceValue = computed(() => this.appearance() ?? this.config.appearance)
+  protected inputPlaceholder = computed(() =>
+    controlPlaceholder(this.appearanceValue(), this.label(), this.placeholder())
+  )
 }
 ```
 
+- **Shell:** the control is the shell's first child and has `peer` plus the floating classes above
+  (copy them as they are: Tailwind only sees classes written out in full). Never draw a label,
+  error or hint in a field; the shell does it, so all fields look and behave the same. Fix looks
+  in `core/field-shell.ts`, once.
 - **Binding:** always `forwardControl()` + `[formControl]="boundControl()"` on the inner element.
   Don't implement `ControlValueAccessor` in a field unless the inner element has no accessor of its
   own (then write one accessor and say why in the field's doc comment).
 - **Don't name a field property `control`, `value` or `formControl`:** Storybook sets story args
   on the component by name and overwrites it.
-- **Errors:** `fieldErrorMessage(field)` only; never hard-code message text in a field.
-- **Look:** every field supports `appearance` (`floating` | `stacked`) and `hintPosition`
-  (`start` | `end`), defaulting to `FORM_KIT_CONFIG`. Copy the label, the message row and their
-  classes from `input-field` so all fields look the same.
+- **Errors:** the shell shows `fieldErrorMessage`; never hard-code message text in a field. A field
+  with built-in feedback (like `password-field`'s checklist) projects it as `nfkFieldMessage`.
+- **Look:** every field has `appearance` (`floating` | `stacked`) and `hintPosition` (`start` |
+  `end`), defaulting to `FORM_KIT_CONFIG`, and re-projects the `nfkFieldMessage` slot.
 - **Inputs:** `input()` / `output()` / `model()`, `booleanAttribute` for flags. Generate ids
   (`nfk-<name>-field-${nextId++}`) and allow overriding them.
 - **Accessibility:** a visible label or an `ariaLabel` input; label `for` matches the inner id.
