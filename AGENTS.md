@@ -29,6 +29,7 @@ hint, and wires `aria-describedby`. A field only adds its control and its own in
 @Component({
   selector: 'nfk-<name>-field',
   imports: [ReactiveFormsModule, FIELD_SHELL_IMPORTS, HlmInput /* the helm control it uses */],
+  providers: [provideFieldControl(() => NameField)],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block' },
   template: `
@@ -44,7 +45,7 @@ hint, and wires `aria-describedby`. A field only adds its control and its own in
         hlmInput
         class="peer group-data-[appearance=floating]/nfk:h-11 group-data-[appearance=floating]/nfk:placeholder:text-transparent group-data-[appearance=floating]/nfk:focus:placeholder:text-muted-foreground"
         [id]="inputId()"
-        [formControl]="boundControl()"
+        [formControl]="control()"
         [placeholder]="inputPlaceholder()"
       />
       <ng-content select="[nfkFieldMessage]" ngProjectAs="[nfkFieldMessage]" />
@@ -52,6 +53,7 @@ hint, and wires `aria-describedby`. A field only adds its control and its own in
   `,
 })
 export class NameField {
+  control = input.required<FormControl<string | null>>()
   label = input('')
   hint = input('')
   placeholder = input('')
@@ -59,7 +61,6 @@ export class NameField {
   hintPosition = input<HintPosition | null>(null)
   inputId = input(`nfk-<name>-field-${nextId++}`)
 
-  protected boundControl = forwardControl()
   protected customMessage = contentChild(FieldMessage)
   private config = inject(FORM_KIT_CONFIG)
   protected appearanceValue = computed(() => this.appearance() ?? this.config.appearance)
@@ -73,11 +74,15 @@ export class NameField {
   (copy them as they are: Tailwind only sees classes written out in full). Never draw a label,
   error or hint in a field; the shell does it, so all fields look and behave the same. Fix looks
   in `core/field-shell.ts`, once.
-- **Binding:** always `forwardControl()` + `[formControl]="boundControl()"` on the inner element.
-  Don't implement `ControlValueAccessor` in a field unless the inner element has no accessor of its
-  own (then write one accessor and say why in the field's doc comment).
-- **Don't name a field property `control`, `value` or `formControl`:** Storybook sets story args
-  on the component by name and overwrites it.
+- **Binding:** the control is a signal input, `control = input.required<FormControl<T>>()`, typed to
+  the field's value (`string | null`, `number | null`, `boolean | null`, `T | null`), bound to the
+  inner element with `[formControl]="control()"`. Register the field with
+  `provideFieldControl(() => NameField)` so content inside it can find the control. Don't
+  implement `ControlValueAccessor` in a field unless the inner element's text isn't the value
+  (like `nfkMoneyInput`); write one accessor and say why in its doc comment.
+- **Reacting to the control:** a `FormControl`'s state isn't a signal. Read it in a `computed`
+  together with `controlChanges(this.control)` so it recomputes on value / status / touched
+  changes (see `select-field`).
 - **Errors:** the shell shows `fieldErrorMessage`; never hard-code message text in a field. A field
   with built-in feedback (like `password-field`'s checklist) projects it as `nfkFieldMessage`.
 - **Look:** every field has `appearance` (`floating` | `stacked`) and `hintPosition` (`start` |
@@ -94,7 +99,8 @@ export class NameField {
 
 `<field>.stories.ts` beside the field, title `Fields/<Name> field`. Every field has: `Default`,
 `WithHint`, `Required` (touched, showing the error), `Disabled`, `Readonly` where it applies, and
-`InFormGroup` (`formControlName` inside `[formGroup]`, a submit button that marks all touched).
+`InFormGroup` (`[control]="form.controls.x"` inside `[formGroup]`, a submit button that marks all
+touched).
 Show the control's value and state under the field so the story proves the binding.
 
 Check every story in both themes (toolbar → theme, light / dark). The a11y addon checks contrast;

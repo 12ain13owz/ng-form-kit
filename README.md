@@ -1,11 +1,16 @@
 # ng-form-kit
 
 Reactive Forms fields for Angular 22, built on [spartan/ui](https://spartan.ng) and Tailwind v4.
-Each field is bound like a native input and shows its label, hint and first validation error.
+Each field takes its typed `FormControl` as a signal input and shows its label, hint and first
+validation error.
 
 ```html
 <form [formGroup]="form">
-  <nfk-input-field formControlName="name" label="Name" hint="Friends see this on the bill" />
+  <nfk-input-field
+    [control]="form.controls.name"
+    label="Name"
+    hint="Friends see this on the bill"
+  />
 </form>
 ```
 
@@ -74,7 +79,12 @@ provideFormKit({ appearance: 'stacked', hintPosition: 'start' })
 ```
 
 ```html
-<nfk-input-field formControlName="name" label="Name" appearance="stacked" hintPosition="start" />
+<nfk-input-field
+  [control]="form.controls.name"
+  label="Name"
+  appearance="stacked"
+  hintPosition="start"
+/>
 ```
 
 On a card or any surface other than the page background, set `--nfk-field-bg` to that surface's
@@ -83,7 +93,7 @@ colour so the floated label's background matches: `<div class="bg-card [--nfk-fi
 ### Money
 
 ```html
-<nfk-money-field formControlName="price" label="Price" />
+<nfk-money-field [control]="form.controls.price" label="Price" />
 ```
 
 The control holds **minor units** as an integer, or `null` when empty: satang for THB, so
@@ -103,7 +113,7 @@ Currency and locale default to `provideFormKit({ currency: 'THB', locale: 'th-TH
 
 ```html
 <nfk-select-field
-  formControlName="payer"
+  [control]="form.controls.payer"
   label="Paid by"
   placeholder="Choose a person"
   [options]="people"
@@ -124,9 +134,9 @@ again; `compareWith` matches object values.
 ### Checkbox
 
 ```html
-<nfk-checkbox-field formControlName="splitService" label="Split the service charge too" />
+<nfk-checkbox-field [control]="form.controls.splitService" label="Split the service charge too" />
 
-<nfk-checkbox-field formControlName="agree">
+<nfk-checkbox-field [control]="form.controls.agree">
   I accept the <a href="/terms">terms</a>
 </nfk-checkbox-field>
 ```
@@ -138,10 +148,15 @@ A boolean control. For "must be ticked" use `Validators.requiredTrue` (error key
 
 ```html
 <!-- sign in -->
-<nfk-password-field formControlName="password" label="Password" />
+<nfk-password-field [control]="form.controls.password" label="Password" />
 
 <!-- sign up: a live checklist under the field instead of a single error -->
-<nfk-password-field formControlName="password" label="New password" mode="new" [rules]="rules" />
+<nfk-password-field
+  [control]="form.controls.password"
+  label="New password"
+  mode="new"
+  [rules]="rules"
+/>
 ```
 
 ```ts
@@ -166,7 +181,7 @@ Any field takes its own feedback in place of the error line through the `nfkFiel
 e.g. the same checklist under a username:
 
 ```html
-<nfk-input-field formControlName="username" label="Username">
+<nfk-input-field [control]="form.controls.username" label="Username">
   <nfk-rule-checklist nfkFieldMessage [rules]="usernameRules" />
 </nfk-input-field>
 ```
