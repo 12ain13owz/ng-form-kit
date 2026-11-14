@@ -178,26 +178,65 @@ e.g. the same checklist under a username:
 </nfk-input-field>
 ```
 
-### Error messages
+### Error messages and translation
 
-English messages work out of the box. To translate them, or word them your way, provide your own
-in `app.config.ts`. Example with ngx-translate:
+Use Angular's validators as they are. Each error shows a message:
+
+1. **The validator's own**, set with `withMessage` where you build the form:
+
+   ```ts
+   form = this.nnfb.group({
+     name: ['', withMessage(Validators.required, 'BILL.ITEM_REQUIRED')],
+     password: ['', withMessage(Validators.minLength(8), 'AUTH.PASSWORD_MIN')],
+     email: [
+       '',
+       withMessage([Validators.required, Validators.email], {
+         required: 'AUTH.EMAIL_REQUIRED', // one message per error key
+         email: 'AUTH.EMAIL_INVALID', // keys left out keep the default
+       }),
+     ],
+   })
+   ```
+
+   The validator's params stay with the message, so a translation can use them:
+   `"AUTH.PASSWORD_MIN": "อย่างน้อย {{requiredLength}} ตัวอักษร"`.
+
+2. **Otherwise the app-wide one for that error key** (`required`, `minlength`, `moneyMin`, …), from
+   `provideFormKit({ messages })`. Unset keys use the kit's English defaults (`DEFAULT_MESSAGES`).
+
+A message is a translation key or plain text. Without i18n, plain text works as is and `{{param}}`
+is filled in. With i18n, give the kit your translate function. Use the factory form so it can
+`inject()`:
 
 ```ts
-import { toSignal } from '@angular/core/rxjs-interop'
-import { provideFormKit } from '@12ain13owz/ng-form-kit'
-
-provideFormKit({
-  errorMessage: (key, value) =>
-    typeof value === 'string'
-      ? translate.instant(value) // set with withMessage(...)
-      : translate.instant(`ERRORS.${key.toUpperCase()}`, value as object),
-  language: toSignal(translate.onLangChange), // re-translate on a language switch
+// app.config.ts — ngx-translate
+provideFormKit(() => {
+  const translate = inject(TranslateService)
+  return {
+    messages: {
+      required: 'ERRORS.REQUIRED',
+      minlength: 'ERRORS.MIN_LENGTH', // "อย่างน้อย {{requiredLength}} ตัวอักษร"
+      moneyMin: 'ERRORS.MONEY_MIN', // "ขั้นต่ำ {{minText}}"
+      showPassword: 'COMMON.SHOW_PASSWORD',
+      hidePassword: 'COMMON.HIDE_PASSWORD',
+    },
+    translate: (key, params) => translate.instant(key, params),
+    language: toSignal(translate.onLangChange), // messages follow a language switch
+  }
 })
 ```
 
-Per field: `withMessage(Validators.required, 'NAME_REQUIRED')` keeps the `required` key but sends
-your text (or translation key) as the message.
+With Transloco: `translate: (key, params) => transloco.translate(key, params)` and
+`language: toSignal(transloco.langChanges$)`.
+
+The same `translate` handles the rule checklist's labels and title (pass keys) and the kit's own
+words: `ruleMet` / `ruleUnmet` (read by screen readers) and `showPassword` / `hidePassword`.
+Labels, hints and placeholders are yours: translate them in the template
+(`[label]="'BILL.ITEM' | translate"`).
+
+Validators that already return `{ key, params }` (or a message string) as their error value work
+without `withMessage`. Storybook → Guides → Translation shows all of this with a Thai / English
+switch.
 
 ## Develop
 

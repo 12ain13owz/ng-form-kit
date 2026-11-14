@@ -107,9 +107,14 @@ SplitSlip's fields (#3–#5) are done; it needs the first release (#2) to instal
   (`[formControl]="control()"`), so touched, disabled, validation and spartan's error state behave
   as on a plain input. No `formControlName` / `ngModel` on fields. Content inside a field (the
   rule checklist) reads it through `FIELD_CONTROL` (`provideFieldControl`).
-- **No i18n library in the kit.** English defaults; the app passes `errorMessage` (and a
-  `language` signal) to `provideFormKit`. `withMessage(validator, keyOrText)` sets a per-field
-  message.
+- **Messages (owner, 2026-11): Angular's validators as they are, messages from the app, no i18n
+  library in the kit.** An error shows its validator's own message (`withMessage(validator(s),
+keyOrText | { errorKey: keyOrText })`, which keeps the validator's params), else the app's
+  `messages[errorKey]`, else the kit's English default. Error values `{ key, params }` (the
+  kixly-deck-admin shape) and plain strings work too. The app's `translate(key, params)` turns any
+  message into text; `language` makes everything re-translate on a switch. Rule labels and the
+  kit's own words (`ruleMet`, `ruleUnmet`, `showPassword`, `hidePassword`) go through the same
+  path. `provideFormKit` takes a factory so it can `inject()` the app's translate service.
 - **spartan helm lives in `src/lib/ui/`** as the spartan CLI writes it, with its
   `@spartan-ng/helm/*` imports rewritten to relative paths (`npm run helm:fix`), because
   ng-packagr doesn't rewrite path aliases. `@spartan-ng/brain`, `@angular/*`, `@ng-icons/*`,

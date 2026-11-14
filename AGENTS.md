@@ -83,7 +83,10 @@ export class NameField {
 - **Reacting to the control:** a `FormControl`'s state isn't a signal. Read it in a `computed`
   together with `controlChanges(this.control)` so it recomputes on value / status / touched
   changes (see `select-field`).
-- **Errors:** the shell shows `fieldErrorMessage`; never hard-code message text in a field. A field
+- **Errors and words:** the shell shows `fieldErrorMessage`; never hard-code message text in a
+  field. Any word a field shows or reads out itself (a button label, a screen-reader note) is a
+  `messages` entry with an English default in `DEFAULT_MESSAGES`, passed through
+  `config.translate` and re-read on `config.language`, with an input to override it. A field
   with built-in feedback (like `password-field`'s checklist) projects it as `nfkFieldMessage`.
 - **Look:** every field has `appearance` (`floating` | `stacked`) and `hintPosition` (`start` |
   `end`), defaulting to `FORM_KIT_CONFIG`, and re-projects the `nfkFieldMessage` slot.
