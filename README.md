@@ -248,11 +248,26 @@ That covers labels, hints, placeholders, `ariaLabel`, select option labels, the 
 rule labels and the checklist title, error messages, and the kit's own words: `ruleMet` /
 `ruleUnmet` (read by screen readers) and `showPassword` / `hidePassword`.
 
-Setting `translate` is optional. Without it, the kit shows text exactly as you pass it, so you can
-translate in your templates instead (`[label]="'BILL.ITEM' | translate"`), or mix both: plain
-text passes through ngx-translate and Transloco unchanged when no key matches. Error messages are
-the exception: they're made inside the kit, so for translated errors set `messages` and
-`translate`.
+Setting `translate` is optional. Two ways to work:
+
+|                                                 | **A. Give the kit `translate`**                                 | **B. No `translate`: you pass finished text**                                                                              |
+| ----------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Labels, hints, placeholders, options            | keys: `label="BILL.ITEM"`                                       | translate in the template: `[label]="'BILL.ITEM' \| translate"`                                                            |
+| `withMessage`                                   | a key: `withMessage(Validators.required, 'BILL.ITEM_REQUIRED')` | translated text: `withMessage(Validators.required, translate.instant('BILL.ITEM_REQUIRED'))`                               |
+| Your own validators (`{ key, params }`)         | `key` is a translation key                                      | `key` is translated text (`{{param}}` is still filled in)                                                                  |
+| Default errors (`required`, `minlength`, …)     | `messages: { required: 'ERRORS.REQUIRED' }`                     | `messages: { required: 'กรุณากรอกข้อมูล' }`                                                                                   |
+| Rule labels, checklist title                    | keys                                                            | translated text                                                                                                            |
+| Show / hide button, screen-reader met / not met | `messages` keys                                                 | `messages` text, or the `showLabel` / `metLabel` / … inputs                                                                |
+| **After a language switch**                     | everything follows (`language`)                                 | labels follow (the pipe does); **errors, rule labels and the kit's words stay in the old language** until you rebuild them |
+
+In B, the kit shows exactly what you pass: hand it a key and the key itself appears. Text you
+translate in TypeScript (`translate.instant`) is fixed when the code runs, so validators made when
+the form is built keep their language; rules can follow if you build them in a `computed` on the
+language and pass `[rules]="rules()"`.
+
+So: **one-language app**, B is fine (pass Thai text). **App that switches language**, use A. Mixing
+works too: set `translate` for errors and rules, and keep `| translate` on labels if you prefer;
+plain text passes through ngx-translate and Transloco unchanged when no key matches.
 
 Validators that already return `{ key, params }` (or a message string) as their error value work
 without `withMessage`.
