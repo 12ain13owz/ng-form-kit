@@ -1,5 +1,5 @@
 /*
- * Public API of @12ain13owz/ng-form-kit.
+ * Public API of @workformeow/ng-form-kit.
  */
 
 // Setup and validation helpers
