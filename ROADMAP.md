@@ -9,8 +9,8 @@ with the code, the code wins — fix this file in the same change. Never re-open
 
 ## What it is
 
-`@12ain13owz/ng-form-kit` is the owner's own set of Angular form fields, shared by their apps
-(first user: [SplitSlip](https://github.com/12ain13owz/splitslip)). Every field:
+`@workformeow/ng-form-kit` is the owner's own set of Angular form fields, shared by their apps
+(first user: [SplitSlip](https://github.com/workformeow/splitslip)). Every field:
 
 - takes its typed `FormControl` as a signal input (`[control]="form.controls.name"`),
 - shows label, hint and the first validation error, with messages the app controls,
@@ -59,7 +59,7 @@ Tests (Vitest) come in one pass once a field's API is stable, not while it is st
 | 8   | `otp-field`            | ⬜     | spartan `input-otp`                                                                                                                                                                   |
 | 9   | Form helpers           | ⬜     | `markTouchedOnSubmit` directive, `FORM_KIT_IMPORTS`                                                                                                                                   |
 | 10  | Tests                  | ⬜     | Vitest for core and each field                                                                                                                                                        |
-| 11  | Storybook online       | ⬜     | publish `storybook-static` (GitHub Pages or Vercel)                                                                                                                                   |
+| 11  | Storybook online       | ✅     | GitHub Pages: https://workformeow.github.io/ng-form-kit/, deployed by `storybook.yml` on every merge into `main`                                                                      |
 
 ✅ done · 🚧 in progress · ⬜ not started · ⏸ deferred
 
@@ -69,13 +69,13 @@ SplitSlip's fields (#3–#5) are done; it needs the first release (#2) to instal
 
 ## Release (npmjs.com)
 
-- Public on **npmjs.com** as `@12ain13owz/ng-form-kit` (owner, 2026-11): anyone installs it with
+- Public on **npmjs.com** as `@workformeow/ng-form-kit` (owner, 2026-11): anyone installs it with
   `npm install`, no token. The source is public and MIT, so nothing needs a private registry.
 - `.github/workflows/release.yml` runs on a `v*` tag: checks the tag matches the package version,
   skips if that version is already on npm, builds, and runs `npm publish` from `dist/ng-form-kit`.
 - **Trusted publishing:** npm checks the workflow through GitHub's OIDC token (`id-token: write`),
   so no npm token is stored in the repo, and the package gets a provenance statement. Set up once
-  on npmjs.com → the package → Settings → Trusted publisher: GitHub Actions, owner `12ain13owz`,
+  on npmjs.com → the package → Settings → Trusted publisher: GitHub Actions, owner `workformeow`,
   repo `ng-form-kit`, workflow `release.yml`.
 - **First publish:** if npm won't take a trusted publisher before the package exists, publish
   0.1.0 once by hand (`npm login`, `npm run build`, `cd dist/ng-form-kit`,
@@ -92,6 +92,13 @@ SplitSlip's fields (#3–#5) are done; it needs the first release (#2) to instal
 ## Locked decisions
 
 - **Own repo, own package:** not copied into apps. Apps install a released version.
+- **Owner name `workformeow`** (owner, 2026-11; the GitHub account was renamed from
+  `12ain13owz` before the first publish): GitHub `workformeow/ng-form-kit`, npm
+  `@workformeow/ng-form-kit`, Storybook `workformeow.github.io/ng-form-kit`. Same name on GitHub
+  and npm.
+- **Storybook on GitHub Pages** (owner, 2026-11), not Vercel: the build runs in Actions with Node
+  from `.nvmrc`, like CI. One-time setup: Settings → Pages → Source: GitHub Actions. No preview per
+  PR; PRs carry screenshots instead.
 - **Versions (owner, 2026-11):** latest stable of every tool, never pinned to an older line:
   Node **26 LTS, at least 26.13.1** (a security release; `engines` + `engine-strict` refuse older),
   npm 11, Angular 22, Tailwind 4, spartan 1.x, Storybook 10. TypeScript stays on what Angular
@@ -162,4 +169,3 @@ keyOrText | { errorKey: keyOrText })`, which keeps the validator's params), else
 
 - A popover select (search, many options) as its own field, if an app needs one; `select-field`
   stays native.
-- Storybook hosting: GitHub Pages or Vercel.
