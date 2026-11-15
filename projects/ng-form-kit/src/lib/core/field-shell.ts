@@ -10,7 +10,7 @@ import {
 import { BrnField, BrnFieldA11yService } from '@spartan-ng/brain/field'
 import { HlmField, HlmFieldImports } from '../ui/field/src'
 import { fieldErrorMessage } from './field-error'
-import { FORM_KIT_CONFIG } from './form-kit-config'
+import { FORM_KIT_CONFIG, injectText } from './form-kit-config'
 import type { FieldAppearance, HintPosition } from './form-kit-config'
 
 const SHELL_A11Y = new InjectionToken<BrnFieldA11yService>('nfk shell a11y')
@@ -65,7 +65,7 @@ export class FieldMessage {}
   },
   template: `
     @if (label() && appearanceValue() === 'stacked') {
-      <label hlmFieldLabel class="mb-2" [for]="inputId()">{{ label() }}</label>
+      <label hlmFieldLabel class="mb-2" [for]="inputId()">{{ labelText() }}</label>
     }
 
     <div class="relative">
@@ -75,7 +75,7 @@ export class FieldMessage {}
           class="pointer-events-none absolute top-0 left-3 max-w-[calc(100%-1.5rem)] -translate-y-1/2 truncate rounded-sm bg-[var(--nfk-field-bg,var(--background))] px-1 text-xs leading-4 text-muted-foreground transition-all duration-150 ease-out group-data-[matches-spartan-invalid=true]/field:text-destructive peer-placeholder-shown:top-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:bg-[var(--nfk-field-bg,var(--background))] peer-focus:text-xs peer-focus:text-foreground peer-disabled:opacity-50 peer-data-[rest=true]:top-1/2 peer-data-[rest=true]:bg-transparent peer-data-[rest=true]:text-sm"
           [for]="inputId()"
         >
-          {{ label() }}
+          {{ labelText() }}
         </label>
       }
     </div>
@@ -86,7 +86,7 @@ export class FieldMessage {}
         class="mt-1 flex flex-wrap items-start gap-x-3 gap-y-1 text-xs leading-4 group-data-[appearance=floating]/nfk:px-4 group-data-[appearance=inline]/nfk:ps-7"
       >
         @if (hint() && hintPositionValue() === 'start' && !showError() && !hasCustomMessage()) {
-          <p hlmFieldDescription class="min-w-0 flex-1 text-xs leading-4">{{ hint() }}</p>
+          <p hlmFieldDescription class="min-w-0 flex-1 text-xs leading-4">{{ hintText() }}</p>
         }
         @if (hasCustomMessage()) {
           <div hlmFieldDescription class="min-w-48 flex-[1_1_12rem] text-xs leading-4 text-current">
@@ -99,7 +99,7 @@ export class FieldMessage {}
         }
         @if (hint() && (hintPositionValue() === 'end' || hasCustomMessage())) {
           <p hlmFieldDescription class="ml-auto max-w-full text-right text-xs leading-4">
-            {{ hint() }}
+            {{ hintText() }}
           </p>
         }
       </div>
@@ -121,6 +121,10 @@ export class FieldShell {
   hasCustomMessage = input(false)
 
   private config = inject(FORM_KIT_CONFIG)
+  private text = injectText()
+  // Label and hint go through the app's translate, so they can be translation keys.
+  protected labelText = computed(() => this.text(this.label()))
+  protected hintText = computed(() => this.text(this.hint()))
   private field = inject(BrnField)
   private a11y = inject(SHELL_A11Y)
   /**

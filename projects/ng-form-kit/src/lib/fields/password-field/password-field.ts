@@ -13,7 +13,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucideEye, lucideEyeOff } from '@ng-icons/lucide'
 import { controlPlaceholder, FIELD_SHELL_IMPORTS, FieldMessage } from '../../core/field-shell'
 import type { FieldRule } from '../../core/field-rules'
-import { FORM_KIT_CONFIG } from '../../core/form-kit-config'
+import { FORM_KIT_CONFIG, injectText } from '../../core/form-kit-config'
 import type { FieldAppearance, HintPosition } from '../../core/form-kit-config'
 import { provideFieldControl } from '../../core/field-control'
 import { HlmInput } from '../../ui/input/src'
@@ -67,12 +67,12 @@ let nextId = 0
         [formControl]="control()"
         [placeholder]="inputPlaceholder()"
         [attr.autocomplete]="mode() === 'new' ? 'new-password' : 'current-password'"
-        [attr.aria-label]="label() ? null : ariaLabel()"
+        [attr.aria-label]="label() ? null : ariaText()"
       />
       <button
         type="button"
         class="absolute top-1/2 right-1.5 flex size-8 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-        [attr.aria-label]="visible() ? hideLabel() : showLabel()"
+        [attr.aria-label]="visible() ? hideText() : showText()"
         [attr.aria-pressed]="visible()"
         [attr.aria-controls]="inputId()"
         [disabled]="control().disabled"
@@ -108,10 +108,10 @@ export class PasswordField {
   rules = input<readonly FieldRule[]>([])
   /** Heading above the checklist, e.g. "Password policy". */
   rulesTitle = input('')
-  /** Label of the button while the password is hidden. */
-  showLabel = input('Show password')
-  /** Label of the button while the password is shown. */
-  hideLabel = input('Hide password')
+  /** Label of the button while the password is hidden. Defaults to `messages.showPassword`. */
+  showLabel = input<string | null>(null)
+  /** Label of the button while the password is shown. Defaults to `messages.hidePassword`. */
+  hideLabel = input<string | null>(null)
   appearance = input<FieldAppearance | null>(null)
   hintPosition = input<HintPosition | null>(null)
   /** Id of the inner `<input>`; generated when not set. */
@@ -120,9 +120,17 @@ export class PasswordField {
   protected customMessage = contentChild(FieldMessage)
   protected visible = signal(false)
   private config = inject(FORM_KIT_CONFIG)
+  private text = injectText()
+  protected ariaText = computed(() => this.text(this.ariaLabel()))
+  protected showText = computed(() =>
+    this.text(this.showLabel() ?? this.config.messages['showPassword'] ?? '')
+  )
+  protected hideText = computed(() =>
+    this.text(this.hideLabel() ?? this.config.messages['hidePassword'] ?? '')
+  )
   protected hasRules = computed(() => this.rules().length > 0)
   protected appearanceValue = computed(() => this.appearance() ?? this.config.appearance)
   protected inputPlaceholder = computed(() =>
-    controlPlaceholder(this.appearanceValue(), this.label(), this.placeholder())
+    controlPlaceholder(this.appearanceValue(), this.label(), this.text(this.placeholder()))
   )
 }

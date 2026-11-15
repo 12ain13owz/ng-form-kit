@@ -3,6 +3,7 @@ import type { AbstractControl } from '@angular/forms'
 import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucideCheck, lucideCircle, lucideX } from '@ng-icons/lucide'
 import { controlChanges, FIELD_CONTROL } from '../../core/field-control'
+import { FORM_KIT_CONFIG, injectText } from '../../core/form-kit-config'
 import { rulePasses } from '../../core/field-rules'
 import type { FieldRule } from '../../core/field-rules'
 
@@ -41,8 +42,8 @@ interface RuleLine {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block', 'aria-live': 'polite' },
   template: `
-    @if (title()) {
-      <p class="mb-1 text-xs tracking-wide text-muted-foreground uppercase">{{ title() }}</p>
+    @if (titleText()) {
+      <p class="mb-1 text-xs tracking-wide text-muted-foreground uppercase">{{ titleText() }}</p>
     }
     <ul class="space-y-1">
       @for (line of lines(); track line.key) {
@@ -59,7 +60,7 @@ interface RuleLine {
             [name]="stateIcon[line.state]"
           />
           <span>{{ line.label }}</span>
-          <span class="sr-only">({{ line.state === 'met' ? metLabel() : unmetLabel() }})</span>
+          <span class="sr-only">({{ line.state === 'met' ? metText() : unmetText() }})</span>
         </li>
       }
     </ul>
@@ -69,14 +70,24 @@ export class RuleChecklist {
   rules = input.required<readonly FieldRule[]>()
   /** Optional heading, e.g. "Password policy". */
   title = input('')
-  /** Read by screen readers after a met line. */
-  metLabel = input('met')
-  /** Read by screen readers after a line not met yet. */
-  unmetLabel = input('not met')
+  /** Read by screen readers after a met line. Defaults to `messages.ruleMet`. */
+  metLabel = input<string | null>(null)
+  /** Read by screen readers after a line not met yet. Defaults to `messages.ruleUnmet`. */
+  unmetLabel = input<string | null>(null)
   /** The control to check. Defaults to the control of the field this checklist sits in. */
   control = input<AbstractControl | null>(null)
 
   private field = inject(FIELD_CONTROL, { optional: true })
+  private config = inject(FORM_KIT_CONFIG)
+  // Rule labels and the title go through the app's translate, so they can be translation keys.
+  private text = injectText()
+  protected metText = computed(() =>
+    this.text(this.metLabel() ?? this.config.messages['ruleMet'] ?? 'met')
+  )
+  protected unmetText = computed(() =>
+    this.text(this.unmetLabel() ?? this.config.messages['ruleUnmet'] ?? 'not met')
+  )
+  protected titleText = computed(() => (this.title() ? this.text(this.title()) : ''))
 
   protected stateIcon: Record<RuleState, string> = {
     met: 'lucideCheck',
@@ -104,7 +115,7 @@ export class RuleChecklist {
     const toLine = (rule: FieldRule, nested: boolean): RuleLine => {
       const met = value !== '' && rulePasses(rule, value)
       const state: RuleState = met ? 'met' : showUnmet && !nested ? 'unmet' : 'pending'
-      return { key: rule.key, label: rule.label, state, nested }
+      return { key: rule.key, label: this.text(rule.label), state, nested }
     }
 
     // A group's children follow it, one level deep.

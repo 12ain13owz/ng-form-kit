@@ -23,10 +23,14 @@ First release.
 - Every field takes its typed `FormControl` as a signal input: `[control]="form.controls.x"`.
 - Every field: floating (default) or stacked label, error and hint under the box (the hint drops
   below a long error), `nfkFieldMessage` slot for custom feedback, `aria-describedby` wired.
-- `provideFormKit()`: error messages (English defaults), `language` signal, default
-  `appearance`, `hintPosition`, `locale`, `currency`.
-- `withMessage()`; `nfk-field-shell`, `provideFieldControl()` and `controlChanges()` for an app's
-  own fields.
+- `provideFormKit()`: default `appearance`, `hintPosition`, `locale`, `currency`.
+- Messages: `withMessage(validator(s), message | { errorKey: message })` keeps Angular's validators
+  and their params; `provideFormKit({ messages, translate, language })` maps error keys to your
+  i18n keys and translates everything the kit shows (labels, hints, placeholders, options too,
+  so keys can be passed); `provideFormKit(() => …)` can `inject()`. Optional: without
+  `translate`, text shows as passed.
+  Error values shaped `{ key, params }` work as they are.
+- `nfk-field-shell`, `provideFieldControl()` and `controlChanges()` for an app's own fields.
 - `FieldRule[]`, `rulesValidator()`, `nfk-rule-checklist`.
 - Money helpers: `formatMoney`, `formatMinorUnits`, `moneyMin`, `moneyMax`.
 - No colours of its own: follows the app's spartan theme, light and dark. Kit variables

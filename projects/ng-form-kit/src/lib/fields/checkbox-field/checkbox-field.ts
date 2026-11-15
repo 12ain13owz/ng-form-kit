@@ -9,6 +9,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms'
 import type { FormControl } from '@angular/forms'
 import { FIELD_SHELL_IMPORTS, FieldMessage, FieldShell } from '../../core/field-shell'
+import { injectText } from '../../core/form-kit-config'
 import type { HintPosition } from '../../core/form-kit-config'
 import { provideFieldControl } from '../../core/field-control'
 import { HlmCheckbox } from '../../ui/checkbox/src'
@@ -48,13 +49,13 @@ let nextId = 0
           class="mt-0.5"
           [inputId]="inputId()"
           [formControl]="control()"
-          [aria-label]="hasLabel() ? null : ariaLabel()"
+          [aria-label]="hasLabel() ? null : ariaText()"
           [aria-describedby]="shell()?.describedBy() ?? null"
         />
         <label
           class="cursor-pointer text-sm leading-5 text-foreground select-none group-has-[button:disabled]/field:cursor-not-allowed group-has-[button:disabled]/field:opacity-50 group-data-[matches-spartan-invalid=true]/field:text-destructive [&_a]:underline"
           [for]="inputId()"
-          >{{ label() }}<ng-content
+          >{{ labelText() }}<ng-content
         /></label>
       </div>
       <ng-content select="[nfkFieldMessage]" ngProjectAs="[nfkFieldMessage]" />
@@ -77,6 +78,9 @@ export class CheckboxField {
   protected customMessage = contentChild(FieldMessage)
   protected shell = viewChild(FieldShell)
   /** A label from the input or projected content; without either, `ariaLabel` names the box. */
+  private text = injectText()
+  protected labelText = computed(() => this.text(this.label()))
+  protected ariaText = computed(() => this.text(this.ariaLabel()))
   protected hasLabel = computed(() => !!this.label() || !this.ariaLabel())
   // Under a checkbox, a hint reads as a description of the label, so it starts on the left.
   protected hintPositionValue = computed(() => this.hintPosition() ?? 'start')
