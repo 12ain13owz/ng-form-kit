@@ -86,7 +86,9 @@ export class NameField {
 - **Errors and words:** the shell shows `fieldErrorMessage`; never hard-code message text in a
   field. Any word a field shows or reads out itself (a button label, a screen-reader note) is a
   `messages` entry with an English default in `DEFAULT_MESSAGES`, passed through
-  `config.translate` and re-read on `config.language`, with an input to override it. A field
+  `config.translate` and re-read on `config.language`, with an input to override it. Any text the
+  app passes in (label, hint, placeholder, aria label, option label) goes through `injectText()`
+  inside a `computed`. Stories use plain text and no translate function. A field
   with built-in feedback (like `password-field`'s checklist) projects it as `nfkFieldMessage`.
 - **Look:** every field has `appearance` (`floating` | `stacked`) and `hintPosition` (`start` |
   `end`), defaulting to `FORM_KIT_CONFIG`, and re-projects the `nfkFieldMessage` slot.

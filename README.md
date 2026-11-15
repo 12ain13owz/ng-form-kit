@@ -229,14 +229,33 @@ provideFormKit(() => {
 With Transloco: `translate: (key, params) => transloco.translate(key, params)` and
 `language: toSignal(transloco.langChanges$)`.
 
-The same `translate` handles the rule checklist's labels and title (pass keys) and the kit's own
-words: `ruleMet` / `ruleUnmet` (read by screen readers) and `showPassword` / `hidePassword`.
-Labels, hints and placeholders are yours: translate them in the template
-(`[label]="'BILL.ITEM' | translate"`).
+**The kit doesn't translate anything by itself.** It has no dictionaries; it hands every text it
+shows to the `translate` function your app gave it, and that function (your i18n service, your
+`th.json` / `en.json`) does the translating. So, once `translate` is set, you can pass keys
+everywhere:
+
+```html
+<nfk-input-field [control]="form.controls.item" label="BILL.ITEM" hint="BILL.ITEM_HINT" />
+<nfk-select-field
+  [control]="form.controls.payer"
+  label="BILL.PAYER"
+  placeholder="BILL.CHOOSE"
+  [options]="people"
+/>
+```
+
+That covers labels, hints, placeholders, `ariaLabel`, select option labels, the checkbox label,
+rule labels and the checklist title, error messages, and the kit's own words: `ruleMet` /
+`ruleUnmet` (read by screen readers) and `showPassword` / `hidePassword`.
+
+Setting `translate` is optional. Without it, the kit shows text exactly as you pass it, so you can
+translate in your templates instead (`[label]="'BILL.ITEM' | translate"`), or mix both: plain
+text passes through ngx-translate and Transloco unchanged when no key matches. Error messages are
+the exception: they're made inside the kit, so for translated errors set `messages` and
+`translate`.
 
 Validators that already return `{ key, params }` (or a message string) as their error value work
-without `withMessage`. Storybook → Guides → Translation shows all of this with a Thai / English
-switch.
+without `withMessage`.
 
 ## Develop
 

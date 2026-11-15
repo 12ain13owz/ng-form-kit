@@ -26,7 +26,9 @@ First release.
 - `provideFormKit()`: default `appearance`, `hintPosition`, `locale`, `currency`.
 - Messages: `withMessage(validator(s), message | { errorKey: message })` keeps Angular's validators
   and their params; `provideFormKit({ messages, translate, language })` maps error keys to your
-  i18n keys and translates everything the kit says; `provideFormKit(() => …)` can `inject()`.
+  i18n keys and translates everything the kit shows (labels, hints, placeholders, options too,
+  so keys can be passed); `provideFormKit(() => …)` can `inject()`. Optional: without
+  `translate`, text shows as passed.
   Error values shaped `{ key, params }` work as they are.
 - `nfk-field-shell`, `provideFieldControl()` and `controlChanges()` for an app's own fields.
 - `FieldRule[]`, `rulesValidator()`, `nfk-rule-checklist`.
