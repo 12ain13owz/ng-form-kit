@@ -10,7 +10,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms'
 import type { FormControl } from '@angular/forms'
 import { controlPlaceholder, FIELD_SHELL_IMPORTS, FieldMessage } from '../../core/field-shell'
-import { FORM_KIT_CONFIG } from '../../core/form-kit-config'
+import { FORM_KIT_CONFIG, injectText } from '../../core/form-kit-config'
 import type { FieldAppearance, HintPosition } from '../../core/form-kit-config'
 import { provideFieldControl } from '../../core/field-control'
 import { currencySymbol } from '../../core/money'
@@ -57,7 +57,7 @@ let nextId = 0
         [allowNegative]="allowNegative()"
         [placeholder]="inputPlaceholder()"
         [readOnly]="readonly()"
-        [attr.aria-label]="label() ? null : ariaLabel()"
+        [attr.aria-label]="label() ? null : ariaText()"
       />
       <span
         class="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-sm text-muted-foreground"
@@ -91,11 +91,13 @@ export class MoneyField {
 
   protected customMessage = contentChild(FieldMessage)
   private config = inject(FORM_KIT_CONFIG)
+  private text = injectText()
+  protected ariaText = computed(() => this.text(this.ariaLabel()))
   protected currencyValue = computed(() => this.currency() ?? this.config.currency)
   protected localeValue = computed(() => this.locale() ?? this.config.locale)
   protected symbol = computed(() => currencySymbol(this.currencyValue(), this.localeValue()))
   protected appearanceValue = computed(() => this.appearance() ?? this.config.appearance)
   protected inputPlaceholder = computed(() =>
-    controlPlaceholder(this.appearanceValue(), this.label(), this.placeholder())
+    controlPlaceholder(this.appearanceValue(), this.label(), this.text(this.placeholder()))
   )
 }

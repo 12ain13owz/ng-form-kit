@@ -1,4 +1,4 @@
-import { InjectionToken, makeEnvironmentProviders } from '@angular/core'
+import { inject, InjectionToken, makeEnvironmentProviders } from '@angular/core'
 import type { EnvironmentProviders, Signal } from '@angular/core'
 
 /**
@@ -125,3 +125,20 @@ export const provideFormKit = (
       },
     },
   ])
+
+/**
+ * A function that turns a label, hint, placeholder or other text the app passed into what to
+ * show: through the app's `translate` (so a translation key works), or as it is when the app set
+ * none. Call it inside a `computed` so the text follows `language`. Call `injectText` in an
+ * injection context.
+ */
+export const injectText = (): ((text: string | null | undefined) => string) => {
+  const config = inject(FORM_KIT_CONFIG)
+  return (text) => {
+    if (!text) {
+      return ''
+    }
+    config.language?.()
+    return config.translate(text, {})
+  }
+}

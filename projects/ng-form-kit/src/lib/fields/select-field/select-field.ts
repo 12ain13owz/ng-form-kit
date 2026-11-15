@@ -13,7 +13,7 @@ import type { FormControl } from '@angular/forms'
 import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucideChevronDown } from '@ng-icons/lucide'
 import { FIELD_SHELL_IMPORTS, FieldMessage } from '../../core/field-shell'
-import { FORM_KIT_CONFIG } from '../../core/form-kit-config'
+import { FORM_KIT_CONFIG, injectText } from '../../core/form-kit-config'
 import type { FieldAppearance, HintPosition } from '../../core/form-kit-config'
 import { controlChanges, provideFieldControl } from '../../core/field-control'
 import { HlmInput } from '../../ui/input/src'
@@ -63,14 +63,14 @@ const isEmpty = (value: unknown): boolean => value === null || value === undefin
         [formControl]="control()"
         [compareWith]="compareWith()"
         [attr.data-rest]="resting()"
-        [attr.aria-label]="label() ? null : ariaLabel()"
+        [attr.aria-label]="label() ? null : ariaText()"
         (focus)="focused.set(true)"
         (blur)="focused.set(false)"
       >
-        <option [ngValue]="null" [disabled]="!clearable()">{{ placeholder() }}</option>
+        <option [ngValue]="null" [disabled]="!clearable()">{{ placeholderText() }}</option>
         @for (option of options(); track $index) {
           <option [ngValue]="option.value" [disabled]="!!option.disabled">
-            {{ option.label }}
+            {{ optionLabels()[$index] }}
           </option>
         }
       </select>
@@ -107,6 +107,11 @@ export class SelectField<T = unknown> {
   protected customMessage = contentChild(FieldMessage)
   protected focused = signal(false)
   private config = inject(FORM_KIT_CONFIG)
+  private text = injectText()
+  protected ariaText = computed(() => this.text(this.ariaLabel()))
+  protected placeholderText = computed(() => this.text(this.placeholder()))
+  // Option labels go through the app's translate too, so they can be translation keys.
+  protected optionLabels = computed(() => this.options().map((option) => this.text(option.label)))
   private changes = controlChanges(this.control)
   // Read straight from the control (right on the first render), recomputed on its changes.
   private value = computed(() => (this.changes(), this.control().value))

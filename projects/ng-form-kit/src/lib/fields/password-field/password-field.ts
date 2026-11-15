@@ -13,7 +13,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucideEye, lucideEyeOff } from '@ng-icons/lucide'
 import { controlPlaceholder, FIELD_SHELL_IMPORTS, FieldMessage } from '../../core/field-shell'
 import type { FieldRule } from '../../core/field-rules'
-import { FORM_KIT_CONFIG } from '../../core/form-kit-config'
+import { FORM_KIT_CONFIG, injectText } from '../../core/form-kit-config'
 import type { FieldAppearance, HintPosition } from '../../core/form-kit-config'
 import { provideFieldControl } from '../../core/field-control'
 import { HlmInput } from '../../ui/input/src'
@@ -67,7 +67,7 @@ let nextId = 0
         [formControl]="control()"
         [placeholder]="inputPlaceholder()"
         [attr.autocomplete]="mode() === 'new' ? 'new-password' : 'current-password'"
-        [attr.aria-label]="label() ? null : ariaLabel()"
+        [attr.aria-label]="label() ? null : ariaText()"
       />
       <button
         type="button"
@@ -120,19 +120,17 @@ export class PasswordField {
   protected customMessage = contentChild(FieldMessage)
   protected visible = signal(false)
   private config = inject(FORM_KIT_CONFIG)
+  private text = injectText()
+  protected ariaText = computed(() => this.text(this.ariaLabel()))
   protected showText = computed(() =>
     this.text(this.showLabel() ?? this.config.messages['showPassword'] ?? '')
   )
   protected hideText = computed(() =>
     this.text(this.hideLabel() ?? this.config.messages['hidePassword'] ?? '')
   )
-  private text = (message: string): string => (
-    this.config.language?.(),
-    this.config.translate(message, {})
-  )
   protected hasRules = computed(() => this.rules().length > 0)
   protected appearanceValue = computed(() => this.appearance() ?? this.config.appearance)
   protected inputPlaceholder = computed(() =>
-    controlPlaceholder(this.appearanceValue(), this.label(), this.placeholder())
+    controlPlaceholder(this.appearanceValue(), this.label(), this.text(this.placeholder()))
   )
 }

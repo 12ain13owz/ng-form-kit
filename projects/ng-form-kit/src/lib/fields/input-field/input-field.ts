@@ -10,7 +10,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms'
 import type { FormControl } from '@angular/forms'
 import { controlPlaceholder, FIELD_SHELL_IMPORTS, FieldMessage } from '../../core/field-shell'
-import { FORM_KIT_CONFIG } from '../../core/form-kit-config'
+import { FORM_KIT_CONFIG, injectText } from '../../core/form-kit-config'
 import type { FieldAppearance, HintPosition } from '../../core/form-kit-config'
 import { provideFieldControl } from '../../core/field-control'
 import { HlmInput } from '../../ui/input/src'
@@ -63,7 +63,7 @@ let nextId = 0
         [readOnly]="readonly()"
         [attr.autocomplete]="autocomplete()"
         [attr.inputmode]="inputmode()"
-        [attr.aria-label]="label() ? null : ariaLabel()"
+        [attr.aria-label]="label() ? null : ariaText()"
       />
       <ng-content select="[nfkFieldMessage]" ngProjectAs="[nfkFieldMessage]" />
     </nfk-field-shell>
@@ -91,8 +91,10 @@ export class InputField {
 
   protected customMessage = contentChild(FieldMessage)
   private config = inject(FORM_KIT_CONFIG)
+  private text = injectText()
+  protected ariaText = computed(() => this.text(this.ariaLabel()))
   protected appearanceValue = computed(() => this.appearance() ?? this.config.appearance)
   protected inputPlaceholder = computed(() =>
-    controlPlaceholder(this.appearanceValue(), this.label(), this.placeholder())
+    controlPlaceholder(this.appearanceValue(), this.label(), this.text(this.placeholder()))
   )
 }

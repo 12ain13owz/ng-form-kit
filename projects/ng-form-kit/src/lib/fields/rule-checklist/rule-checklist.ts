@@ -3,7 +3,7 @@ import type { AbstractControl } from '@angular/forms'
 import { NgIcon, provideIcons } from '@ng-icons/core'
 import { lucideCheck, lucideCircle, lucideX } from '@ng-icons/lucide'
 import { controlChanges, FIELD_CONTROL } from '../../core/field-control'
-import { FORM_KIT_CONFIG } from '../../core/form-kit-config'
+import { FORM_KIT_CONFIG, injectText } from '../../core/form-kit-config'
 import { rulePasses } from '../../core/field-rules'
 import type { FieldRule } from '../../core/field-rules'
 
@@ -79,11 +79,8 @@ export class RuleChecklist {
 
   private field = inject(FIELD_CONTROL, { optional: true })
   private config = inject(FORM_KIT_CONFIG)
-  // Rule labels and the title go through the app's translate function, so they can be i18n keys.
-  private text = (message: string): string => (
-    this.config.language?.(),
-    this.config.translate(message, {})
-  )
+  // Rule labels and the title go through the app's translate, so they can be translation keys.
+  private text = injectText()
   protected metText = computed(() =>
     this.text(this.metLabel() ?? this.config.messages['ruleMet'] ?? 'met')
   )
