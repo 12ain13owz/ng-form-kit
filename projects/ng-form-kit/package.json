@@ -1,11 +1,11 @@
 {
-  "name": "@12ain13owz/ng-form-kit",
+  "name": "@workformeow/ng-form-kit",
   "version": "0.1.0",
   "description": "Reactive Forms fields for Angular, built on spartan/ui and Tailwind",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/12ain13owz/ng-form-kit.git"
+    "url": "git+https://github.com/workformeow/ng-form-kit.git"
   },
   "publishConfig": {
     "access": "public"
@@ -29,9 +29,9 @@
     "tslib": "^2.3.0"
   },
   "sideEffects": false,
-  "homepage": "https://github.com/12ain13owz/ng-form-kit#readme",
+  "homepage": "https://github.com/workformeow/ng-form-kit#readme",
   "bugs": {
-    "url": "https://github.com/12ain13owz/ng-form-kit/issues"
+    "url": "https://github.com/workformeow/ng-form-kit/issues"
   },
   "keywords": [
     "angular",

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `@12ain13owz/ng-form-kit`. Versions follow [SemVer](https://semver.org/);
+All notable changes to `@workformeow/ng-form-kit`. Versions follow [SemVer](https://semver.org/);
 while `0.x`, a minor version may change the API.
 
 ## 0.1.0 — 2026-11-14
@@ -38,7 +38,7 @@ First release.
 
 ### Install
 
-`npm install @12ain13owz/ng-form-kit` from npmjs.com, no token.
+`npm install @workformeow/ng-form-kit` from npmjs.com, no token.
 
 ### Requires
 

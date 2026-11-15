@@ -4,6 +4,9 @@ Reactive Forms fields for Angular 22, built on [spartan/ui](https://spartan.ng) 
 Each field takes its typed `FormControl` as a signal input and shows its label, hint and first
 validation error.
 
+**See every field live in Storybook: https://workformeow.github.io/ng-form-kit/** (light / dark
+toggle in the toolbar).
+
 ```html
 <form [formGroup]="form">
   <nfk-input-field
@@ -14,17 +17,18 @@ validation error.
 </form>
 ```
 
-| Doc                      | What                                          |
-| ------------------------ | --------------------------------------------- |
-| [ROADMAP.md](ROADMAP.md) | What is built, what is next, locked decisions |
-| [AGENTS.md](AGENTS.md)   | How to write a field, stories, code style     |
+| Doc                                                     | What                                          |
+| ------------------------------------------------------- | --------------------------------------------- |
+| [Storybook](https://workformeow.github.io/ng-form-kit/) | Every field and state, live                   |
+| [ROADMAP.md](ROADMAP.md)                                | What is built, what is next, locked decisions |
+| [AGENTS.md](AGENTS.md)                                  | How to write a field, stories, code style     |
 
 ## Install in an app
 
 The package is public on npmjs.com; no token or `.npmrc` needed:
 
 ```bash
-npm install @12ain13owz/ng-form-kit @spartan-ng/brain @angular/cdk @ng-icons/core @ng-icons/lucide tw-animate-css
+npm install @workformeow/ng-form-kit @spartan-ng/brain @angular/cdk @ng-icons/core @ng-icons/lucide tw-animate-css
 ```
 
 The app needs Tailwind v4 and a spartan theme (`npx ng g @spartan-ng/cli:init` sets both up). Then
@@ -35,7 +39,7 @@ tell Tailwind to scan the kit, or its classes won't be generated, in the app's g
 @import 'tw-animate-css';
 @import '@spartan-ng/brain/hlm-tailwind-preset.css';
 
-@source '../node_modules/@12ain13owz/ng-form-kit';
+@source '../node_modules/@workformeow/ng-form-kit';
 ```
 
 (The path is relative to that CSS file.)
