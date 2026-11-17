@@ -140,6 +140,11 @@ keyOrText | { errorKey: keyOrText })`, which keeps the validator's params), else
   its `<select>` in its own view where the floating label can't follow it. Values keep their type
   through `ngValue`. A control without a placeholder signals "empty" to the floating label with
   `data-rest="true"` (empty and not focused).
+- **The select's open list looks like spartan's select** where the browser supports a
+  customizable select (`appearance: base-select`, Chrome / Edge today), with a mouse or trackpad
+  (`pointer: fine`): popover colours, rounded list, highlighted option, check on the chosen one.
+  Other browsers show their own list in the theme's `--popover` colours; touch screens keep the
+  phone's own picker (owner, 2026-11: it looks right on phones, and a JS list wouldn't).
 - **A checkbox carries its own label** beside the box: the shell runs in `inline` mode (no label,
   message row indented past the box, hint on the left by default). spartan's checkbox keeps its
   focusable button inside its own view, so the field hands it the shell's `describedBy()` ids.
@@ -167,5 +172,5 @@ keyOrText | { errorKey: keyOrText })`, which keeps the validator's params), else
 
 ## Open questions
 
-- A popover select (search, many options) as its own field, if an app needs one; `select-field`
-  stays native.
+- A searchable select (combobox, many options) as its own field, if an app needs one;
+  `select-field` stays native.

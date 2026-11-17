@@ -41,8 +41,10 @@ const isEmpty = (value: unknown): boolean => value === null || value === undefin
  * everywhere else. `placeholder` is the empty choice's text; it can be picked again only with
  * `clearable`. For object values whose instances change, pass `compareWith`.
  *
- * The open list is drawn by the browser: options take the theme's `--popover` colours (so it
- * follows light / dark), but its shape and spacing can't be styled.
+ * The open list looks like spartan's select (rounded popover, highlighted options, check on the
+ * chosen one) where the browser supports a customizable select (`appearance: base-select`:
+ * Chrome and Edge today). Elsewhere it is the browser's own list in the theme's `--popover`
+ * colours. Touch screens (`pointer: coarse`) always keep the phone's own picker.
  */
 @Component({
   selector: 'nfk-select-field',
@@ -61,7 +63,7 @@ const isEmpty = (value: unknown): boolean => value === null || value === undefin
     >
       <select
         hlmInput
-        class="peer cursor-pointer appearance-none pe-10 text-foreground group-data-[appearance=floating]/nfk:h-11 data-[rest=true]:text-transparent [&>option]:bg-popover [&>option]:text-popover-foreground"
+        class="peer cursor-pointer appearance-none pe-10 text-foreground group-data-[appearance=floating]/nfk:h-11 data-[rest=true]:text-transparent pointer-fine:supports-[appearance:base-select]:[appearance:base-select] pointer-fine:supports-[appearance:base-select]:items-center pointer-fine:supports-[appearance:base-select]:[&_option]:cursor-default pointer-fine:supports-[appearance:base-select]:[&_option]:gap-2.5 pointer-fine:supports-[appearance:base-select]:[&_option]:rounded-xl pointer-fine:supports-[appearance:base-select]:[&_option]:px-3 pointer-fine:supports-[appearance:base-select]:[&_option]:py-2 pointer-fine:supports-[appearance:base-select]:[&_option]:text-sm pointer-fine:supports-[appearance:base-select]:[&_option]:outline-none [&_option::checkmark]:order-1 [&_option::checkmark]:ms-auto pointer-fine:supports-[appearance:base-select]:[&_option:disabled]:opacity-50 pointer-fine:supports-[appearance:base-select]:[&_option:enabled:is(:hover,:focus-visible)]:bg-accent pointer-fine:supports-[appearance:base-select]:[&_option:enabled:is(:hover,:focus-visible)]:text-accent-foreground [&::picker(select)]:mt-1 [&::picker(select)]:max-h-72 [&::picker(select)]:min-w-[anchor-size(width)] [&::picker(select)]:overflow-y-auto [&::picker(select)]:rounded-2xl [&::picker(select)]:border-0 [&::picker(select)]:bg-popover [&::picker(select)]:p-1 [&::picker(select)]:text-popover-foreground [&::picker(select)]:shadow-2xl [&::picker(select)]:ring-1 [&::picker(select)]:ring-foreground/5 pointer-fine:[&::picker(select)]:[appearance:base-select] [&::picker-icon]:hidden [&>option]:bg-popover [&>option]:text-popover-foreground"
         [id]="inputId()"
         [formControl]="control()"
         [compareWith]="compareWith()"
