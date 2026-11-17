@@ -15,7 +15,9 @@ First release.
 - `nfk-money-field`: value in minor units (satang for THB) as an integer; plain number while
   focused, grouped on blur; any ISO 4217 currency.
 - `nfk-select-field`: native `<select>`; values keep their type; `placeholder`, `clearable`,
-  `compareWith`; the open list uses the theme's popover colours, light and dark.
+  `compareWith`; the open list looks like spartan's select where the browser supports a
+  customizable select (Chrome / Edge, mouse), otherwise the browser's own list in the theme's
+  popover colours; phones keep their own picker.
 - `nfk-checkbox-field`: boolean; label beside the box, from an input or projected content.
 
 ### Shared
