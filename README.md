@@ -48,12 +48,13 @@ tell Tailwind to scan the kit, or its classes won't be generated, in the app's g
 
 The fields have no colours of their own: they use the app's spartan theme variables (`--primary`,
 `--ring`, `--input`, `--border`, `--destructive`, `--foreground`, `--muted-foreground`,
-`--background`). Define them in `:root` and `.dark` (or generate them with
+`--background`, `--popover`, `--popover-foreground`). Define them in `:root` and `.dark` (or generate them with
 `npx ng g @spartan-ng/cli:theme`) and the fields follow, light and dark alike.
 
 Dark mode is the `.dark` class on `<html>`, as spartan uses it. To follow the system setting,
 toggle that class from `matchMedia('(prefers-color-scheme: dark)')` (a media query alone misses
-spartan's `dark:` classes).
+spartan's `dark:` classes). Also set `color-scheme: dark` in `.dark` (and `light` in `:root`) so
+the browser's own parts (the select list's scrollbar, autofill) turn dark too.
 
 The kit's own variables, all optional:
 

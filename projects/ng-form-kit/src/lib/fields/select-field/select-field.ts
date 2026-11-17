@@ -40,6 +40,9 @@ const isEmpty = (value: unknown): boolean => value === null || value === undefin
  * Native on purpose: phones open their own picker, and keyboard and screen readers work as
  * everywhere else. `placeholder` is the empty choice's text; it can be picked again only with
  * `clearable`. For object values whose instances change, pass `compareWith`.
+ *
+ * The open list is drawn by the browser: options take the theme's `--popover` colours (so it
+ * follows light / dark), but its shape and spacing can't be styled.
  */
 @Component({
   selector: 'nfk-select-field',
@@ -58,7 +61,7 @@ const isEmpty = (value: unknown): boolean => value === null || value === undefin
     >
       <select
         hlmInput
-        class="peer cursor-pointer appearance-none pe-10 text-foreground group-data-[appearance=floating]/nfk:h-11 data-[rest=true]:text-transparent [&>option]:text-foreground"
+        class="peer cursor-pointer appearance-none pe-10 text-foreground group-data-[appearance=floating]/nfk:h-11 data-[rest=true]:text-transparent [&>option]:bg-popover [&>option]:text-popover-foreground"
         [id]="inputId()"
         [formControl]="control()"
         [compareWith]="compareWith()"
