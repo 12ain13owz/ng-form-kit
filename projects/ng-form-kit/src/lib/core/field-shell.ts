@@ -81,15 +81,22 @@ export class FieldMessage {}
     </div>
 
     @if (hasCustomMessage() || showError() || hint()) {
-      <!-- Wraps: when the error and the hint don't fit on one line, the hint drops below. -->
+      <!-- Wraps: when the error and the hint don't fit on one line, the hint drops below.
+           nth-last-2:mt-0 undoes spartan's field-description pull-up (-mt-1), which is meant
+           for stacked descriptions, not for items side by side in this row. -->
       <div
         class="mt-1 flex flex-wrap items-start gap-x-3 gap-y-1 text-xs leading-4 group-data-[appearance=floating]/nfk:px-4 group-data-[appearance=inline]/nfk:ps-7"
       >
         @if (hint() && hintPositionValue() === 'start' && !showError() && !hasCustomMessage()) {
-          <p hlmFieldDescription class="min-w-0 flex-1 text-xs leading-4">{{ hintText() }}</p>
+          <p hlmFieldDescription class="min-w-0 flex-1 text-xs leading-4 nth-last-2:mt-0">
+            {{ hintText() }}
+          </p>
         }
         @if (hasCustomMessage()) {
-          <div hlmFieldDescription class="min-w-48 flex-[1_1_12rem] text-xs leading-4 text-current">
+          <div
+            hlmFieldDescription
+            class="min-w-48 flex-[1_1_12rem] text-xs leading-4 text-current nth-last-2:mt-0"
+          >
             <ng-content select="[nfkFieldMessage]" />
           </div>
         } @else {
@@ -98,7 +105,10 @@ export class FieldMessage {}
           }}</hlm-field-error>
         }
         @if (hint() && (hintPositionValue() === 'end' || hasCustomMessage())) {
-          <p hlmFieldDescription class="ml-auto max-w-full text-right text-xs leading-4">
+          <p
+            hlmFieldDescription
+            class="ml-auto max-w-full text-right text-xs leading-4 nth-last-2:mt-0"
+          >
             {{ hintText() }}
           </p>
         }
