@@ -28,7 +28,8 @@ export type PasswordFieldMode = 'current' | 'new'
 let nextId = 0
 
 /**
- * A password input with a show / hide button, bound to a `FormControl` through `[control]`:
+ * A password input with its own show / hide button (the browser's built-in reveal button, shown
+ * by Edge, is hidden so there is only one), bound to a `FormControl` through `[control]`:
  *
  * ```html
  * <!-- sign in -->
@@ -59,7 +60,7 @@ let nextId = 0
     >
       <input
         hlmInput
-        class="peer pr-11 text-foreground group-data-[appearance=floating]/nfk:h-11 group-data-[appearance=floating]/nfk:placeholder:text-transparent group-data-[appearance=floating]/nfk:focus:placeholder:text-muted-foreground"
+        class="peer pr-11 text-foreground group-data-[appearance=floating]/nfk:h-11 group-data-[appearance=floating]/nfk:placeholder:text-transparent group-data-[appearance=floating]/nfk:focus:placeholder:text-muted-foreground [&::-ms-reveal]:hidden"
         autocapitalize="off"
         spellcheck="false"
         [id]="inputId()"

@@ -10,8 +10,8 @@ First release.
 ### Fields
 
 - `nfk-input-field`: text, email, search, tel, url, number.
-- `nfk-password-field`: show / hide button, `mode` (`current` / `new`) sets `autocomplete`,
-  optional rules checklist.
+- `nfk-password-field`: its own show / hide button (Edge's built-in reveal button is hidden),
+  `mode` (`current` / `new`) sets `autocomplete`, optional rules checklist.
 - `nfk-money-field`: value in minor units (satang for THB) as an integer; plain number while
   focused, grouped on blur; any ISO 4217 currency.
 - `nfk-select-field`: native `<select>`; values keep their type; `placeholder`, `clearable`,
