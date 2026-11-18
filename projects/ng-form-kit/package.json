@@ -1,5 +1,5 @@
 {
-  "name": "@workformeow/ng-form-kit",
+  "name": "@workformeow-dev/ng-form-kit",
   "version": "0.1.0",
   "description": "Reactive Forms fields for Angular, built on spartan/ui and Tailwind",
   "license": "MIT",

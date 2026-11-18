@@ -25,10 +25,11 @@ toggle in the toolbar).
 
 ## Install in an app
 
-The package is public on npmjs.com; no token or `.npmrc` needed:
+The package is public on npmjs.com as `@workformeow-dev/ng-form-kit` (the npm scope is
+`workformeow-dev`, the GitHub owner `workformeow`); no token or `.npmrc` needed:
 
 ```bash
-npm install @workformeow/ng-form-kit @spartan-ng/brain @angular/cdk @ng-icons/core @ng-icons/lucide tw-animate-css
+npm install @workformeow-dev/ng-form-kit @spartan-ng/brain @angular/cdk @ng-icons/core @ng-icons/lucide tw-animate-css
 ```
 
 The app needs Tailwind v4 and a spartan theme (`npx ng g @spartan-ng/cli:init` sets both up). Then
@@ -39,7 +40,7 @@ tell Tailwind to scan the kit, or its classes won't be generated, in the app's g
 @import 'tw-animate-css';
 @import '@spartan-ng/brain/hlm-tailwind-preset.css';
 
-@source '../node_modules/@workformeow/ng-form-kit';
+@source '../node_modules/@workformeow-dev/ng-form-kit';
 ```
 
 (The path is relative to that CSS file.)

@@ -9,7 +9,7 @@ with the code, the code wins — fix this file in the same change. Never re-open
 
 ## What it is
 
-`@workformeow/ng-form-kit` is the owner's own set of Angular form fields, shared by their apps
+`@workformeow-dev/ng-form-kit` is the owner's own set of Angular form fields, shared by their apps
 (first user: [SplitSlip](https://github.com/workformeow/splitslip)). Every field:
 
 - takes its typed `FormControl` as a signal input (`[control]="form.controls.name"`),
@@ -69,7 +69,7 @@ SplitSlip's fields (#3–#5) are done; it needs the first release (#2) to instal
 
 ## Release (npmjs.com)
 
-- Public on **npmjs.com** as `@workformeow/ng-form-kit` (owner, 2026-11): anyone installs it with
+- Public on **npmjs.com** as `@workformeow-dev/ng-form-kit` (owner, 2026-11): anyone installs it with
   `npm install`, no token. The source is public and MIT, so nothing needs a private registry.
 - `.github/workflows/release.yml` runs on a `v*` tag: checks the tag matches the package version,
   skips if that version is already on npm, builds, and runs `npm publish` from `dist/ng-form-kit`.
@@ -93,9 +93,12 @@ SplitSlip's fields (#3–#5) are done; it needs the first release (#2) to instal
 
 - **Own repo, own package:** not copied into apps. Apps install a released version.
 - **Owner name `workformeow`** (owner, 2026-11; the GitHub account was renamed from
-  `12ain13owz` before the first publish): GitHub `workformeow/ng-form-kit`, npm
-  `@workformeow/ng-form-kit`, Storybook `workformeow.github.io/ng-form-kit`. Same name on GitHub
-  and npm.
+  `12ain13owz` before the first publish): GitHub `workformeow/ng-form-kit`, Storybook
+  `workformeow.github.io/ng-form-kit`.
+- **npm scope `@workformeow-dev`** (owner, 2026-11): the npm user `workformeow` was lost to a
+  typo in its sign-up email, so the package is `@workformeow-dev/ng-form-kit`. GitHub keeps
+  `workformeow`; the two don't need to match (the package's `repository` field and its provenance
+  point back to the GitHub repo). Don't rename either again.
 - **Storybook on GitHub Pages** (owner, 2026-11), not Vercel: the build runs in Actions with Node
   from `.nvmrc`, like CI. One-time setup: Settings → Pages → Source: GitHub Actions. No preview per
   PR; PRs carry screenshots instead.

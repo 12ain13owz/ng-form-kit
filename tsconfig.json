@@ -7,7 +7,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@workformeow/ng-form-kit": ["./dist/ng-form-kit"]
+      "@workformeow-dev/ng-form-kit": ["./dist/ng-form-kit"]
     },
     "skipLibCheck": true,
     "isolatedModules": true,
