@@ -1,4 +1,4 @@
-# @workformeow/ng-form-kit
+# @workformeow-dev/ng-form-kit
 
 Reactive Forms fields for Angular on spartan/ui and Tailwind v4.
 
